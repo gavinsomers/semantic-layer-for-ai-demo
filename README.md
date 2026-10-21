@@ -244,7 +244,7 @@ Still open: when the model queries two metrics, the answer takes the last one (h
 Kept for other reasons:
 
 - `order_promotions` and `cost_estimates` have no `recorded_at`, so they cannot be cut back to what was known at a cutoff.
-- The stock metrics' `non_additive_dimension` has no `window_groupings`: a position is taken on the last day of the window across all products, not per product.
+- The stock metrics' `non_additive_dimension` has no `group_by` (the latest spec's name for the old `window_groupings`): a position is taken on the last day of the window across all products, not per product.
 - Qualifiers the router knows are listed in `context/synonyms.yml` (`qualifiers:`); a narrowing it does not know is still missed. The figure check marks signs only within a short distance of the number.
 - The routing that keeps SQL second classifies the `question` a client sends; an MCP client's model can misstate it. The identity, row filters, column allow-list and the read-only connection hold whatever is sent; in production, so must the warehouse role.
 - `goods_value_mtd` gives one allowed warning: dbt 1.12 also writes an Open Semantic Interchange document (`target/osi_document.json`), which cannot hold a cumulative metric's `grain_to_date`. MetricFlow's answers are unaffected. `sl validate` lists it in `ALLOWED_WARNINGS`; any other warning fails CI.
