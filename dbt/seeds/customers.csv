@@ -1,0 +1,21 @@
+customer_id,customer_type,region,email
+C001,returning,South East,customer001@example.invalid
+C002,returning,North West,customer002@example.invalid
+C003,returning,Scotland,customer003@example.invalid
+C004,new,Wales,customer004@example.invalid
+C005,new,Yorkshire,customer005@example.invalid
+C006,new,Midlands,customer006@example.invalid
+C007,returning,South West,customer007@example.invalid
+C008,new,London,customer008@example.invalid
+C009,new,South East,customer009@example.invalid
+C010,new,North West,customer010@example.invalid
+C011,new,Scotland,customer011@example.invalid
+C012,returning,Wales,customer012@example.invalid
+C013,new,Yorkshire,customer013@example.invalid
+C014,new,Midlands,customer014@example.invalid
+C015,new,South West,customer015@example.invalid
+C016,new,London,customer016@example.invalid
+C017,new,South East,customer017@example.invalid
+C018,new,North West,customer018@example.invalid
+C019,new,Scotland,customer019@example.invalid
+C020,new,Wales,customer020@example.invalid

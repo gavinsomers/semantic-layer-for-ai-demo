@@ -1,0 +1,133 @@
+# Synonyms (guide chapter 3): the words people use, mapped to the layer's names.
+#
+# The router reads this file to turn a question into a request. A word that
+# could mean two measures does NOT belong here: it goes in ambiguity.yml with
+# a default and a clarifying question ("profit", "make", "revenue", "stock").
+# Longer phrases win over shorter ones ("approved refunds" beats "refunds").
+
+metrics:
+  goods_value: [sales, goods value, accepted goods value, gmv, order value]
+  order_count: [orders, number of orders, how many orders, order count]
+  average_order_value: [average order value, aov, average order, average basket]
+  refunds_paid: [refunds, refunds paid]
+  refund_rate: [refund rate, refund percentage, returns rate]
+  goods_value_mtd: [month to date, month-to-date, mtd, running total]
+  advertising: [advertising, ad spend, ads, marketing spend]
+  cash_received: [cash, cash received, cash came in, money came in, payments received]
+  contribution_after_ads: [contribution, contribution after advertising, provisional contribution]
+  contribution_after_ads_v2: [approved refunds, approved-refund rule, count approved refunds]
+  stock_available: [available stock, units available, available to sell, stock available, available,
+                    free to sell]
+  stock_on_hand: [stock on hand, on hand, units on hand]
+  # Promoted from the SQL fallback cluster "orders with a promotion" (guide ch 10).
+  orders_with_promotion: [orders with a promotion, orders with promotions, promotion orders,
+                          promoted orders, orders using a promotion, orders with a promo code,
+                          orders with a discount code, promoted purchases, promo code,
+                          promotion code, discount code]
+
+# Word sets: a metric picked when every word appears, in any order. "The
+# refunds we'd approved" asks for the approved-refund rule as plainly as
+# "approved refunds" does. Folded like every phrase here; a set competes with
+# the phrases above by its length (its words joined by spaces).
+metric_word_sets:
+  contribution_after_ads_v2: [[approved, refunds]]
+
+# Things people count that no governed metric covers. Read out of the
+# question before metrics are matched: with plurals folded, "order lines"
+# would otherwise read as "orders" (order_count). A question about one of
+# these goes to the flagged SQL fallback.
+not_metrics: [order line, order line item]
+
+dimensions:
+  product_group: [product group, by group, furniture and lighting, furniture vs lighting, category]
+  channel: [by channel, per channel, each channel, channel by channel]
+  customer__region: [region, regions, by region]
+  customer__customer_type: [customer type, new vs returning, new and returning]
+  product: [by product, per product, each product, sku]
+  customer: [which customers, by customer, per customer, each customer]
+  metric_time__day: [by day, daily, each day, per day]
+  metric_time__week: [by week, weekly, each week]
+  metric_time__month: [by month, monthly, each month]
+
+# Words that scope a question WIDER than a definition's default selection.
+# "Contribution across all channels" must not get the default channel
+# (paid search): the dimension is left unfiltered instead.
+wider:
+  channel: [all channels, every channel, across channels, any channel, whatever the channel]
+
+# Words for dimension values, used as filters.
+values:
+  channel:
+    paid_search: [paid search, paid-search, ppc, google ads]
+    email: [email, newsletter]
+    organic: [organic, seo]
+  product_group:
+    furniture: [furniture]
+    lighting: [lighting, lamps]
+  # Products, as the order lines and stock records name them. Applied only
+  # where the metric has a product dimension (serving/layer.py
+  # resolve_dimension); a metric that cannot be split by product (advertising,
+  # contribution, cash) refuses that part with its reason. Plurals fold
+  # ("sofas" -> "sofa"); "lamps" alone is the lighting group, above.
+  product:
+    Sofa: [sofa, settee]
+    Armchair: [armchair]
+    Dining chair: [dining chair]
+    Bed frame: [bed frame, bed]
+    Bookcase: [bookcase]
+    Oak bookcase: [oak bookcase]
+    Coffee table: [coffee table]
+    Side table: [side table]
+    Desk: [desk]
+    Ottoman: [ottoman]
+    Brass table lamp: [brass table lamp, table lamp]
+    Desk lamp: [desk lamp]
+    Floor lamp: [floor lamp]
+    Wall light: [wall light]
+    Lampshade: [lampshade]
+    Ceiling pendant: [ceiling pendant, pendant]
+
+# Time phrases. "Today" is the demo clock's date (serving/clock.py): Friday 2 October 2026.
+time_phrases:
+  # A report: its orders, and what was recorded by its cutoff. A stock position
+  # "at the Friday review" is the one recorded by the cutoff (on 4 September),
+  # not the last day of the order window: at_cutoff marks that.
+  - phrases: [friday review, trading review]
+    start: "2026-08-31"
+    end: "2026-09-03"
+    cutoff: friday_review
+    at_cutoff: true
+  - phrases: [trial's first four days, first four days, the trial, last week]
+    start: "2026-08-31"
+    end: "2026-09-03"
+    cutoff: friday_review
+  # A calendar month is read at the latest cutoff that covers it.
+  - phrases: [in september, september]
+    start: "2026-09-01"
+    end: "2026-09-30"
+    cutoff: september_close
+  - phrases: [in august, august]
+    start: "2026-08-01"
+    end: "2026-08-31"
+    cutoff: september_close
+
+# Named cutoffs, when a question asks for one by name. Applied after the time
+# phrases, so "the trial's first four days at the 11 September cutoff" keeps
+# the trial's dates but uses the later records.
+cutoff_phrases:
+  friday_review: [friday cutoff, friday's cutoff, 4 september cutoff, 06 00 on 4 september]
+  lamp_recalculation: [11 september cutoff, lamp recalculation, recalculation cutoff,
+                       as of 11 september, as recorded by 11 september]
+  september_close: [september close, september close cutoff, as of 1 october,
+                    as recorded by 1 october]
+
+# Qualifiers: words that narrow WHICH orders a figure covers. If a question
+# carries one and the request cannot apply it (no metric or filter carries
+# it), a governed answer would quietly answer a wider question ("the goods
+# value of orders that used a promotion" answered with all goods value). The
+# router sends such a question to the flagged SQL fallback, or refuses it
+# when SQL is off. carried_by: metrics whose definition already applies it.
+qualifiers:
+  - meaning: orders that used a promotion
+    words: [promotion, promo, promo code, discount code, voucher, coupon]
+    carried_by: [orders_with_promotion]

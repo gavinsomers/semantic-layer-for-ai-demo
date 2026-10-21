@@ -1,0 +1,22 @@
+# Template: one evaluation case (guide Appendix C, chapter 8).
+#
+# Add to evals/cases.yml. The same scorer (evals/scorer.py) reads it for
+# every variant. Add a ground-truth SQL for any figure to tests/test_evals.py.
+
+cases:
+  - id: <s|c|u><nn>_<short_name>              # s supported, c constrained, u unsupported
+    split: dev                                # dev | held_out (held_out: never used to write context)
+    smoke: false                              # true: in the 8-case subset run on every pull request
+    category: supported                       # supported | constrained | unsupported (guide ch 4)
+    user: finance_lead                        # who asks; access rules apply
+    question: <The question, exactly as a person would type it>
+    expect:
+      behaviour: answer                       # answer | caveat | clarify | refuse
+      metric: <metric_name>                   # the governed metric that should answer, if any
+      total: <number>                         # within 0.5% or one penny
+      values: {<group value>: <number>}       # the breakdown, if the question asks for one
+      filters: {<dimension>: <value>, cutoff: <cutoff_id>}   # must be applied and reported
+      # caveat_any: [<phrase>, <phrase>]      # behaviour caveat: one must appear
+      # options: [<word>, <word>]             # behaviour clarify: each must be offered
+      # must_not_contain: [<figure>]          # behaviour refuse: must not leak
+    tags: [<trap>]                            # fan_out, sign, ambiguous, cutoff, unknown_cost, access, ...

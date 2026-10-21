@@ -1,0 +1,16 @@
+# fct_refunds has no semantic model yet: `sl draft` (guide ch 5) drafts one.
+# In dbt's latest YAML spec a model's semantics sit on its own entry, so an
+# approved draft replaces this file (its tests travel with the draft).
+models:
+  - name: fct_refunds
+    description: >
+      One row per refund at one named cutoff, in the state it had reached by then
+      (requested, approved or paid). No semantic model yet: see `sl draft` (guide ch 5).
+    columns:
+      - name: snapshot_key
+        data_tests: [unique, not_null]
+      - name: refund_state
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [requested, approved, paid]

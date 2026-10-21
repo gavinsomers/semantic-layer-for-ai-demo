@@ -1,0 +1,58 @@
+{
+ "average_order_value": {
+  "cutoff": "september_close",
+  "days": 17,
+  "filters": {},
+  "high": 736.3351,
+  "kind": "level",
+  "low": 0
+ },
+ "cash_received": {
+  "cutoff": "september_close",
+  "days": 57,
+  "filters": {},
+  "high": 632.5764,
+  "kind": "per_day",
+  "low": 0
+ },
+ "goods_value": {
+  "cutoff": "september_close",
+  "days": 57,
+  "filters": {},
+  "high": 686.9117,
+  "kind": "per_day",
+  "low": 0
+ },
+ "order_count": {
+  "cutoff": "september_close",
+  "days": 57,
+  "filters": {},
+  "high": 2.4107,
+  "kind": "per_day",
+  "low": 0
+ },
+ "orders_with_promotion": {
+  "cutoff": "september_close",
+  "days": 57,
+  "filters": {},
+  "high": 0.9439,
+  "kind": "per_day",
+  "low": 0
+ },
+ "refund_rate": {
+  "cutoff": "september_close",
+  "days": 17,
+  "filters": {},
+  "high": 0.2907,
+  "kind": "level",
+  "low": 0
+ },
+ "refunds_paid": {
+  "cutoff": "september_close",
+  "days": 57,
+  "filters": {},
+  "high": 69.0295,
+  "kind": "per_day",
+  "low": 0
+ }
+}

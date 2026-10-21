@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:yellowhammer:response-contract:1.0",
+  "title": "Yellowhammer response contract",
+  "description": "What every answer hands back (book chapter 4, guide chapter 4): the value, the filters applied, the cutoff, caveats, lineage and the SQL that ran, plus the path taken and the question's category.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "question", "user", "category", "path", "answer_text",
+               "metrics", "total", "values", "filters_applied", "cutoff", "time_window", "caveats",
+               "lineage", "compiled_sql", "clarification", "refusal_reason", "access", "generated_at"],
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "question": {"type": "string"},
+    "user": {"type": "string", "minLength": 1},
+    "category": {"enum": ["supported", "constrained", "unsupported"]},
+    "path": {"enum": ["governed", "sql_fallback", "refused", "clarify"]},
+    "answer_text": {"type": "string"},
+    "metrics": {"type": "array", "items": {"type": "string"}},
+    "total": {
+      "description": "The ungrouped figure, computed by the layer (never summed by the caller).",
+      "type": ["number", "null"]
+    },
+    "values": {
+      "description": "The result rows: one object per row, dimension values and metric values.",
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "filters_applied": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "value", "source"],
+        "properties": {
+          "field": {"type": "string"},
+          "value": {"type": ["string", "number"]},
+          "source": {"enum": ["question", "default", "access_policy"]}
+        }
+      }
+    },
+    "cutoff": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["id", "at"],
+         "properties": {"id": {"type": "string"}, "at": {"type": "string"}}}
+      ]
+    },
+    "time_window": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["start", "end"],
+         "properties": {"start": {"type": ["string", "null"]}, "end": {"type": ["string", "null"]}}}
+      ]
+    },
+    "caveats": {"type": "array", "items": {"type": "string"}},
+    "lineage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["metric", "version", "owner", "approver", "status", "last_reviewed"],
+        "properties": {
+          "metric": {"type": "string"},
+          "label": {"type": "string"},
+          "version": {"type": "integer"},
+          "owner": {"type": "string"},
+          "approver": {"type": "string"},
+          "status": {"enum": ["draft", "certified", "deprecated", "on_hold"]},
+          "last_reviewed": {"type": "string"}
+        }
+      }
+    },
+    "compiled_sql": {"type": ["string", "null"]},
+    "clarification": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["question", "options"],
+         "properties": {"question": {"type": "string"},
+                        "options": {"type": "array", "minItems": 2, "items": {"type": "string"}}}}
+      ]
+    },
+    "refusal_reason": {"type": ["string", "null"]},
+    "access": {
+      "description": "The access decision: row filters applied for this user, and whether access refused the request.",
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["row_filters", "denied"],
+         "properties": {"row_filters": {"type": "object"}, "denied": {"type": "boolean"}}}
+      ]
+    },
+    "generated_at": {"type": "string"}
+  },
+  "allOf": [
+    {"if": {"properties": {"path": {"const": "governed"}}},
+     "then": {"properties": {"lineage": {"minItems": 1}, "compiled_sql": {"type": "string"},
+                             "cutoff": {"type": "object"}, "metrics": {"minItems": 1}}}},
+    {"if": {"properties": {"path": {"const": "sql_fallback"}}},
+     "then": {"properties": {"lineage": {"maxItems": 0}, "compiled_sql": {"type": "string"},
+                             "caveats": {"minItems": 1}}}},
+    {"if": {"properties": {"path": {"const": "refused"}}},
+     "then": {"properties": {"refusal_reason": {"type": "string"}, "values": {"maxItems": 0},
+                             "compiled_sql": {"type": "null"}}}},
+    {"if": {"properties": {"path": {"const": "clarify"}}},
+     "then": {"properties": {"clarification": {"type": "object"}, "values": {"maxItems": 0},
+                             "compiled_sql": {"type": "null"}}}}
+  ]
+}

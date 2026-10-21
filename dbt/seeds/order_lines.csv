@@ -1,0 +1,32 @@
+order_line_id,order_id,product,product_group,quantity,goods_value
+YH-1001-1,YH-1001,Armchair,furniture,1,450.00
+YH-1002-1,YH-1002,Brass table lamp,lighting,2,200.00
+YH-1003-1,YH-1003,Coffee table,furniture,1,280.00
+YH-1003-2,YH-1003,Side table,furniture,1,90.00
+YH-1004-1,YH-1004,Dining chair,furniture,4,360.00
+YH-1005-1,YH-1005,Ceiling pendant,lighting,1,90.00
+YH-1006-1,YH-1006,Lampshade,lighting,1,30.00
+YH-2001-1,YH-2001,Bookcase,furniture,1,320.00
+YH-2002-1,YH-2002,Floor lamp,lighting,1,140.00
+YH-2003-1,YH-2003,Ottoman,furniture,1,180.00
+YH-2003-2,YH-2003,Wall light,lighting,2,110.00
+YH-2004-1,YH-2004,Desk,furniture,1,390.00
+YH-2005-1,YH-2005,Bed frame,furniture,1,650.00
+YH-2006-1,YH-2006,Desk lamp,lighting,1,65.00
+YH-2007-1,YH-2007,Dining chair,furniture,2,180.00
+YH-2007-2,YH-2007,Ceiling pendant,lighting,1,90.00
+YH-2008-1,YH-2008,Coffee table,furniture,1,280.00
+YH-2009-1,YH-2009,Lampshade,lighting,2,60.00
+YH-2010-1,YH-2010,Armchair,furniture,1,450.00
+YH-2011-1,YH-2011,Side table,furniture,1,90.00
+YH-2011-2,YH-2011,Brass table lamp,lighting,1,100.00
+YH-2012-1,YH-2012,Bookcase,furniture,1,320.00
+YH-2013-1,YH-2013,Floor lamp,lighting,1,140.00
+YH-2013-2,YH-2013,Wall light,lighting,1,55.00
+YH-2014-1,YH-2014,Bed frame,furniture,1,650.00
+YH-2015-1,YH-2015,Oak bookcase,furniture,1,360.00
+YH-2016-1,YH-2016,Desk lamp,lighting,2,130.00
+YH-2017-1,YH-2017,Ottoman,furniture,1,180.00
+YH-2018-1,YH-2018,Dining chair,furniture,4,360.00
+YH-2018-2,YH-2018,Lampshade,lighting,1,30.00
+YH-2019-1,YH-2019,Coffee table,furniture,1,280.00

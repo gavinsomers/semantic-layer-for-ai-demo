@@ -1,0 +1,28 @@
+# Who must approve a change (guide chapter 9). GitHub requests a review from
+# the owners of every file a pull request touches; with branch protection's
+# "Require review from Code Owners", the merge waits for them.
+#
+# The team names are PLACEHOLDERS: replace them with your organisation's teams.
+# The last matching line wins, so the general rules come first.
+
+*                                         @yellowhammer/data-platform
+
+# The meaning of the numbers: metric owners and the head of data.
+/dbt/models/semantic/                     @yellowhammer/finance-metrics @yellowhammer/commercial-metrics @yellowhammer/head-of-data
+/dbt/models/marts/                        @yellowhammer/analytics-engineering
+/dbt/tests/                               @yellowhammer/analytics-engineering @yellowhammer/finance-metrics
+/ci/expected_metrics.yml                  @yellowhammer/finance-metrics @yellowhammer/commercial-metrics
+/tests/test_friday_figures.py             @yellowhammer/finance-metrics @yellowhammer/commercial-metrics
+/tests/test_metric_regression.py          @yellowhammer/finance-metrics @yellowhammer/commercial-metrics
+
+# What the assistant reads, and what it may see.
+/context/                                 @yellowhammer/head-of-data
+/serving/users.yml                        @yellowhammer/data-governance
+/serving/sql_guard.py                     @yellowhammer/data-governance
+
+# Review records: an agent must never re-lock its own work.
+/authoring/reviewed.lock.json             @yellowhammer/head-of-data
+/change/production_manifest.json          @yellowhammer/head-of-data
+
+# The test set: a held-out case changes only with the evaluation owner's approval.
+/evals/cases.yml                          @yellowhammer/head-of-data

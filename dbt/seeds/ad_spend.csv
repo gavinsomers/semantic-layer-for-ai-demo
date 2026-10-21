@@ -1,0 +1,3 @@
+ad_spend_id,channel,product_group,period_start,period_end,amount,recorded_at
+AD-001,paid_search,furniture,2026-08-31,2026-09-03,300.00,2026-09-04 01:00:00+00:00
+AD-002,paid_search,lighting,2026-08-31,2026-09-03,120.00,2026-09-04 01:00:00+00:00

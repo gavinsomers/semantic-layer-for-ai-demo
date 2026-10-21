@@ -1,0 +1,66 @@
+# Template: one metric with its operating agreement (guide Appendix C, chapter 9).
+# dbt's latest YAML spec (dbt 1.12+): a simple metric sits on its model's
+# entry, beside the semantic model; a metric built from other metrics
+# (ratio, derived, cumulative) goes under the top-level `metrics:` key.
+#
+# Copy into dbt/models/semantic/, fill in every <...>, delete what you do not
+# need. The meta block is read by the serving layer (lineage, caveats,
+# access) and by `sl diff` (what changed, and whether it breaks anything).
+
+models:
+  - name: <mart_name>                         # the model already has semantic_model: and columns
+    metrics:
+      - name: <metric_name>                   # snake_case; a new meaning gets a new name (_v2)
+        label: <What a person calls it>
+        description: >
+          Unit: <GBP | orders | units | a fraction>. Grain: <order line | order | ...>.
+          <What is in, what is out, which date chooses the rows.>
+          Not for: <the questions it must not answer, and what to use instead>.
+        type: simple                          # metrics built from metrics: top-level, below
+        agg: sum                              # sum | count | count_distinct | max | ...
+        expr: <column or SQL expression>
+        config:
+          meta:
+            # --- The operating agreement ----------------------------------
+            owner: <role that decides what it means, e.g. finance lead>
+            approver: <role that certifies it, e.g. head of data>
+            status: draft                     # draft | certified | deprecated | on_hold
+            version: 1                        # bump only together with a new metric name
+            last_reviewed: "<YYYY-MM-DD>"
+            unit: <GBP>
+            # --- Optional -------------------------------------------------
+            # effective_from: "<YYYY-MM-DD>"  # when this version becomes the rule in force
+            # defaults:                       # settings used only when a question leaves them open
+            #   cutoff: <cutoff_id>
+            #   filters: {<dimension>: <value>}
+            # cannot_group_by: [<dimension>]  # splits the definition does not support
+            # hidden: true                    # a building block, never answered directly
+            # sensitive: true
+            # --- When the rule outruns the code (book ch 8: 38 hours) -----
+            # status: on_hold                 # current answers refused, with the reason;
+            # hold:                           # past reports can still be reproduced
+            #   since: "<YYYY-MM-DD HH:MM>"
+            #   until: "<YYYY-MM-DD HH:MM>"   # when the checked version will answer
+            #   reason: >
+            #     <Why there is no current figure, and when there will be one.>
+            # --- When a newer version replaces this one -------------------
+            # status: deprecated
+            # deprecation:
+            #   deprecated_on: "<YYYY-MM-DD>"
+            #   sunset: "<YYYY-MM-DD>"        # not used for current answers from this date
+            #   replaced_by: <metric_name_v2>
+            #   removal: <who decides, on what evidence>
+            #   notice: >
+            #     <One or two sentences every consumer passes on, word for word.>
+
+metrics:
+  - name: <derived_metric_name>
+    label: <...>
+    description: <...>
+    type: derived                             # or ratio (numerator:, denominator:) or cumulative
+    expr: <metric_a> - <metric_b>
+    input_metrics:
+      - name: <metric_a>
+      - name: <metric_b>
+    config:
+      meta: {owner: <...>, approver: <...>, status: draft, version: 1, last_reviewed: "<YYYY-MM-DD>"}

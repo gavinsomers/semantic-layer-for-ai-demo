@@ -1,0 +1,480 @@
+# The semantic layer: entities, dimensions and metrics (dbt latest YAML spec).
+#
+# In the latest spec (dbt 1.12, MetricFlow 0.213) a semantic model is part of
+# the model it describes: `semantic_model:` sits on the model entry, entities
+# and dimensions sit on the columns they read, and simple metrics (which
+# replace measures) sit on the model too. Metrics built from other metrics
+# (ratio, cumulative, derived) are under the top-level `metrics:` key.
+#
+# Rules this file follows (guide chapter 2):
+#   - one primary entity per semantic model, at the model's grain;
+#   - every fact model carries the `cutoff` entity: always filter to ONE cutoff;
+#   - amounts are computed in metrics, not stored as rollups;
+#   - stock is semi-additive (non_additive_dimension), never summed over days.
+#
+# Each metric's description is written for a language model to read: unit,
+# grain, what is in and out, and when NOT to use it. Each metric's meta holds
+# the operating agreement: owner, approver, status, version, last_reviewed.
+# The column tests (grain, accepted values) live here too, beside the
+# semantics they protect.
+
+models:
+
+  - name: dim_customers
+    description: >
+      SYNTHETIC. One row per customer. email is personal data and is never
+      exposed to assistants. Joined to facts through the customer entity.
+    semantic_model:
+      enabled: true
+      name: customers
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+        entity: {type: primary, name: customer}
+      - name: customer_type
+        dimension: {type: categorical}
+      - name: region
+        dimension: {type: categorical}
+
+  - name: fct_order_lines
+    description: >
+      One row per order line that counts, at one named cutoff. Never add rows
+      up across cutoffs. Amounts are already line totals.
+    semantic_model:
+      enabled: true
+      name: order_lines
+    agg_time_dimension: accepted_date
+    columns:
+      # The grain test. If a join fans out (for example a naive join to the
+      # many-to-many order_promotions table) this key repeats and the build stops.
+      - name: snapshot_key
+        data_tests: [unique, not_null]
+        entity: {type: primary, name: order_line_snapshot}
+      - name: order_id
+        entity: {type: foreign, name: order}
+      - name: customer_id
+        entity: {type: foreign, name: customer}
+      - name: channel
+        entity: {type: foreign, name: channel}
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [paid_search, email, organic]
+      - name: product_group
+        entity: {type: foreign, name: product_group}
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [furniture, lighting]
+      - name: cutoff_id
+        entity: {type: foreign, name: cutoff}
+      - name: accepted_date
+        granularity: day
+        dimension: {type: time}
+      - name: product
+        dimension: {type: categorical}
+      # A line with no cost record at all stops the build. A known-unknown cost
+      # is allowed, but only as cost_status = 'unknown' (see tests/).
+      - name: cost_status
+        dimension: {type: categorical}
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [estimated, unknown]
+
+    metrics:
+      - name: goods_value
+        label: Accepted goods value
+        description: >
+          Unit: GBP. Grain: order line. Goods value of accepted, not cancelled order
+          lines, after discounts, net of VAT and customer delivery fees; shipped or
+          not, paid in full or not. Excludes: refunds, costs, cancelled orders.
+          Not for: cash received (use cash_received) or contribution.
+        type: simple
+        agg: sum
+        expr: goods_value
+        config:
+          meta: &goods_meta
+            owner: commercial lead
+            approver: head of data
+            status: certified
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: GBP
+
+      - name: refunds_paid
+        label: Refunds paid
+        description: >
+          Unit: GBP, a positive number. Grain: order line. Refunds paid by the
+          cutoff. Excludes refunds only requested or approved but unpaid.
+          Not for: approved refunds (use contribution_after_ads_v2 as a comparison).
+        type: simple
+        agg: sum
+        expr: refunds_paid
+        config:
+          meta:
+            owner: finance lead
+            approver: head of data
+            status: certified
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: GBP
+
+      - name: order_count
+        label: Orders
+        description: >
+          Unit: orders. Distinct accepted, not cancelled orders. Not for: order
+          lines or units sold.
+        type: simple
+        agg: count_distinct
+        expr: order_id
+        config:
+          meta:
+            owner: commercial lead
+            approver: head of data
+            status: certified
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: orders
+
+      # Promoted from the SQL fallback cluster "orders with a promotion" in the
+      # telemetry report (guide ch 10; `sl telemetry-demo`). promotion_count is
+      # already one number per order, so an order with two codes counts once.
+      - name: orders_with_promotion
+        label: Orders that used a promotion
+        description: >
+          Unit: orders. Distinct accepted, not cancelled orders that used at least
+          one promotion code. An order with two codes counts once. Not for: the
+          number of codes used, or the value of the discount (not recorded).
+        type: simple
+        agg: count_distinct
+        expr: case when promotion_count > 0 then order_id end
+        config:
+          meta:
+            owner: commercial lead
+            approver: head of data
+            status: certified
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: orders
+
+      # Building blocks of contribution (hidden: never an answer on their own).
+      - name: contribution_before_ads_v1
+        label: Contribution before advertising (paid-refund rule)
+        description: Building block of contribution_after_ads. Not for direct answers.
+        type: simple
+        agg: sum
+        expr: contribution_before_ads_paid_rule
+        config:
+          meta:
+            owner: finance lead
+            approver: head of data
+            status: certified
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: GBP
+            hidden: true
+
+      - name: contribution_before_ads_v2
+        label: Contribution before advertising (approved-refund rule)
+        description: Building block of contribution_after_ads_v2. Not for direct answers.
+        type: simple
+        agg: sum
+        expr: contribution_before_ads_approved_rule
+        config:
+          meta:
+            owner: finance lead
+            approver: head of data
+            status: draft
+            version: 2
+            last_reviewed: "2026-10-02"
+            unit: GBP
+            hidden: true
+
+      - name: lines_with_unknown_cost
+        label: Order lines with an unknown cost
+        description: Helper. Above zero means any contribution total is incomplete.
+        type: simple
+        agg: sum
+        expr: cost_unknown
+        config:
+          meta:
+            owner: finance lead
+            approver: head of data
+            status: certified
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: order lines
+            hidden: true
+
+  - name: fct_ad_spend
+    description: >
+      Advertising per channel, whole product group and period, at one named
+      cutoff. No rule shares it below product group.
+    semantic_model:
+      enabled: true
+      name: advertising
+    agg_time_dimension: period_start
+    columns:
+      - name: snapshot_key
+        data_tests: [unique, not_null]
+        entity: {type: primary, name: ad_spend_snapshot}
+      - name: channel
+        entity: {type: foreign, name: channel}
+      - name: product_group
+        entity: {type: foreign, name: product_group}
+      - name: cutoff_id
+        entity: {type: foreign, name: cutoff}
+      - name: period_start
+        granularity: day
+        dimension: {type: time}
+      # The last day a record covers. Advertising is recorded for whole periods
+      # and never split by day, so a contribution window that cuts through a
+      # period cannot be answered (serving/tools.py, advertising_gap).
+      - name: period_end
+        granularity: day
+        dimension: {type: time}
+      - name: advertising
+        data_tests: [not_null]
+
+    metrics:
+      - name: advertising
+        label: Advertising
+        description: >
+          Unit: GBP. Grain: channel, whole product group and period. Advertising
+          recorded for paid search only. Not for: any split below product group
+          (by product, order or customer): there is no allocation rule.
+        type: simple
+        agg: sum
+        expr: advertising
+        config:
+          meta:
+            owner: commercial lead
+            approver: head of data
+            status: certified
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: GBP
+            cannot_group_by: [product, customer, customer__region, customer__customer_type]
+
+  - name: fct_cash_movements
+    description: >
+      Settled money movements on whole orders, at one named cutoff. No product
+      group. signed_amount is + in, - out.
+    semantic_model:
+      enabled: true
+      name: cash_movements
+    agg_time_dimension: order_accepted_date
+    columns:
+      - name: snapshot_key
+        data_tests: [unique, not_null]
+        entity: {type: primary, name: cash_movement_snapshot}
+      - name: order_id
+        entity: {type: foreign, name: order}
+      - name: customer_id
+        entity: {type: foreign, name: customer}
+      - name: channel
+        entity: {type: foreign, name: channel}
+      - name: cutoff_id
+        entity: {type: foreign, name: cutoff}
+      - name: accepted_date
+        granularity: day
+        dimension: {type: time, name: order_accepted_date}
+      - name: direction
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [in, out]
+
+    metrics:
+      - name: cash_received
+        label: Cash received
+        description: >
+          Unit: GBP. Grain: whole order. Settled payments less settled refunds for
+          the selected orders, using payment records available by the cutoff; net
+          of VAT and delivery fees; provider fees not deducted. Not a bank balance
+          or provider payout. Not for: any product group split (payments belong to
+          whole orders and there is no allocation rule).
+        type: simple
+        agg: sum
+        expr: signed_amount
+        config:
+          meta:
+            owner: finance lead
+            approver: head of data
+            status: certified
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: GBP
+            sensitive: true
+            cannot_group_by: [product_group, product]
+
+  - name: fct_stock_daily
+    description: >
+      Stock per product per day, at one named cutoff. Semi-additive across days.
+    semantic_model:
+      enabled: true
+      name: stock
+    agg_time_dimension: snapshot_date
+    columns:
+      - name: snapshot_key
+        data_tests: [unique, not_null]
+        entity: {type: primary, name: stock_snapshot}
+      - name: product_group
+        entity: {type: foreign, name: product_group}
+      - name: cutoff_id
+        entity: {type: foreign, name: cutoff}
+      - name: snapshot_date
+        granularity: day
+        dimension: {type: time}
+      - name: product
+        dimension: {type: categorical, name: stock_product}
+
+    metrics:
+      # Semi-additive: summed across products, but over time only the last
+      # day in the window counts. Summing stock across days is meaningless.
+      - name: stock_on_hand
+        label: Stock on hand (units)
+        description: >
+          Unit: units. Semi-additive: adds across products, never across days; over
+          a period it gives the LAST day's position. Includes reserved and
+          quarantined units. Not for: what can be sold now (use stock_available)
+          or any live decision on an observation more than 24 hours old.
+        type: simple
+        agg: sum
+        expr: on_hand
+        non_additive_dimension: {name: snapshot_date, window_agg: max}
+        config:
+          meta: &stock_meta
+            owner: operations lead
+            approver: head of data
+            status: draft
+            version: 1
+            last_reviewed: "2026-10-02"
+            unit: units
+
+      - name: stock_available
+        label: Stock available (units)
+        description: >
+          Unit: units. On hand less reserved less quarantined, on the last day of
+          the period (semi-additive). Not for: allocating stock now from an
+          observation more than 24 hours old.
+        type: simple
+        agg: sum
+        expr: available
+        non_additive_dimension: {name: snapshot_date, window_agg: max}
+        config:
+          meta: *stock_meta
+
+# Metrics built from other metrics. A metric whose inputs come from two
+# semantic models (contribution: order lines and advertising) must be here.
+metrics:
+
+  # ----------------------------------------------------------- ratio
+  - name: average_order_value
+    label: Average order value
+    description: >
+      Unit: GBP per order. Accepted goods value divided by distinct orders.
+      Not for: averages of order lines or of customers.
+    type: ratio
+    numerator: goods_value
+    denominator: order_count
+    config:
+      meta:
+        owner: commercial lead
+        approver: head of data
+        status: certified
+        version: 1
+        last_reviewed: "2026-10-02"
+        unit: GBP per order
+
+  - name: refund_rate
+    label: Refund rate (paid refunds / goods value)
+    description: >
+      Unit: a fraction (0.05 = 5%). Paid refunds divided by accepted goods value
+      for the same orders and cutoff. Draft: not yet certified. Not for: return
+      rates in units, or refunds approved but not yet paid.
+    type: ratio
+    numerator: refunds_paid
+    denominator: goods_value
+    config:
+      meta:
+        owner: finance lead
+        approver: head of data
+        status: draft
+        version: 1
+        last_reviewed: "2026-10-02"
+        unit: fraction
+
+  # ------------------------------------------------------ cumulative
+  - name: goods_value_mtd
+    label: Accepted goods value, month to date
+    description: >
+      Unit: GBP. Running total of accepted goods value from the first of the
+      month to each day. Group by metric_time__day. Not for: a single period
+      total (use goods_value).
+    type: cumulative
+    input_metric: goods_value
+    grain_to_date: month
+    config:
+      meta: *goods_meta
+
+  # --------------------------------------------- derived: contribution
+  - name: contribution_after_ads
+    label: Provisional contribution after advertising (version 1, paid-refund rule)
+    description: >
+      Unit: GBP. For each counted order line: goods value less refunds paid by
+      the cutoff, less product and fulfilment cost estimates; summed by product
+      group; less that group's advertising for the period and channel, once.
+      An approved but unpaid refund does NOT count. The rule in force.
+      Not: cash received, final profit (no overheads or provider fees), or a
+      split below product group. Not for: what advertising caused.
+    type: derived
+    expr: contribution_before_ads_v1 - advertising
+    input_metrics:
+      - name: contribution_before_ads_v1
+      - name: advertising
+    config:
+      meta:
+        owner: finance lead
+        approver: head of data
+        status: certified
+        version: 1
+        last_reviewed: "2026-10-02"
+        unit: GBP
+        refund_rule: paid-refund rule
+        # The definition's default selection (guide chapter 4): used
+        # only for settings the question leaves open.
+        defaults: &trial_defaults
+          cutoff: friday_review
+          start: "2026-08-31"
+          end: "2026-09-03"
+          filters: {channel: paid_search}
+        cannot_group_by: [product, customer, customer__region, customer__customer_type]
+
+  - name: contribution_after_ads_v2
+    label: Provisional contribution after advertising (version 2, approved-refund rule)
+    description: >
+      Unit: GBP. As contribution_after_ads, except a refund counts once it is
+      approved by the cutoff, paid or not; each refund once. NOT the rule in
+      force before its effective_from date (in its metadata): until then, use
+      only when someone asks what counting approved refunds would do, and label
+      the answer a comparison.
+    type: derived
+    expr: contribution_before_ads_v2 - advertising
+    input_metrics:
+      - name: contribution_before_ads_v2
+      - name: advertising
+    config:
+      meta:
+        owner: finance lead
+        approver: head of data
+        status: draft
+        version: 2
+        last_reviewed: "2026-10-02"
+        effective_from: "2026-10-05"
+        unit: GBP
+        refund_rule: approved-refund rule
+        defaults: *trial_defaults
+        cannot_group_by: [product, customer, customer__region, customer__customer_type]

@@ -1,0 +1,23 @@
+# Template: a verified query (guide Appendix C, chapter 3).
+#
+# Add to context/verified_queries.yml. The router matches the questions; the
+# request is what runs; tests/test_context.py re-runs it and compares with
+# `expected`, so a model change that moves a verified answer fails the build.
+
+verified_queries:
+  - id: vq_<metric>_<what>                    # stable: eval cases and impact reports refer to it
+    questions:                                # the words people actually use; three to five
+      - <How a person asks it>
+      - <Another way they ask it>
+    kind: metric                              # metric | sql (sql: a flagged fallback, a candidate metric)
+    request:
+      metric: <metric_name>
+      group_by: [<dimension>]
+      filters: {<dimension>: <value>}
+      start: "<YYYY-MM-DD>"                   # inclusive
+      end: "<YYYY-MM-DD>"                     # inclusive
+      cutoff: <cutoff_id>                     # always name the cutoff
+    expected: {total: <number>, <group value>: <number>}
+    category: supported                       # supported | constrained
+    verified_by: <role>
+    verified_at: "<YYYY-MM-DD>"

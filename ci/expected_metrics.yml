@@ -1,0 +1,122 @@
+# Metric regression test on frozen data (guide chapter 6).
+#
+# The seeds in dbt/seeds/ are frozen, so every governed metric has one right
+# answer for each request below. `sl regress` (and tests/test_metric_regression.py)
+# asks the semantic layer for each and compares. A formula, filter or join
+# change that moves any of these numbers fails CI, even if the YAML still
+# parses and every dbt test passes.
+#
+# The first block is the book's Friday review (never change those figures).
+# The rest are synthetic and were recorded from this warehouse on 2 October 2026.
+
+expected:
+
+  - id: friday_contribution_paid_rule
+    metric: contribution_after_ads
+    group_by: [product_group]
+    filters: {channel: paid_search}
+    start: "2026-08-31"
+    end: "2026-09-03"
+    cutoff: friday_review
+    total: 50
+    values: {furniture: 120, lighting: -70}
+
+  - id: friday_contribution_approved_rule
+    metric: contribution_after_ads_v2
+    group_by: [product_group]
+    filters: {channel: paid_search}
+    start: "2026-08-31"
+    end: "2026-09-03"
+    cutoff: friday_review
+    total: 0
+    values: {furniture: 120, lighting: -120}
+
+  - id: recalculation_11_september
+    metric: contribution_after_ads
+    filters: {channel: paid_search}
+    start: "2026-08-31"
+    end: "2026-09-03"
+    cutoff: lamp_recalculation
+    total: 0
+
+  - id: friday_cash
+    metric: cash_received
+    filters: {channel: paid_search}
+    start: "2026-08-31"
+    end: "2026-09-03"
+    cutoff: friday_review
+    total: 1200
+
+  - id: friday_goods_value
+    metric: goods_value
+    filters: {channel: paid_search}
+    start: "2026-08-31"
+    end: "2026-09-03"
+    cutoff: friday_review
+    total: 1500
+
+  - id: friday_advertising
+    metric: advertising
+    group_by: [product_group]
+    filters: {channel: paid_search}
+    cutoff: friday_review
+    total: 420
+    values: {furniture: 300, lighting: 120}
+
+  - id: friday_refunds_paid
+    metric: refunds_paid
+    filters: {channel: paid_search}
+    start: "2026-08-31"
+    end: "2026-09-03"
+    cutoff: friday_review
+    total: 100
+
+  # Synthetic from here on.
+  - id: september_goods_by_channel
+    metric: goods_value
+    group_by: [channel]
+    start: "2026-09-01"
+    end: "2026-09-30"
+    cutoff: september_close
+    total: 4145
+    values: {email: 2210, organic: 1085, paid_search: 850}
+
+  - id: september_orders
+    metric: order_count
+    start: "2026-09-01"
+    end: "2026-09-30"
+    cutoff: september_close
+    total: 15
+
+  - id: september_orders_with_promotion
+    metric: orders_with_promotion
+    start: "2026-09-01"
+    end: "2026-09-30"
+    cutoff: september_close
+    total: 4
+
+  - id: september_average_order_value
+    metric: average_order_value
+    start: "2026-09-01"
+    end: "2026-09-30"
+    cutoff: september_close
+    total: 276.3333
+
+  - id: september_refund_rate
+    metric: refund_rate
+    start: "2026-09-01"
+    end: "2026-09-30"
+    cutoff: september_close
+    total: 0.0229
+
+  - id: friday_stock_available
+    metric: stock_available
+    group_by: [product_group]
+    cutoff: friday_review
+    total: 38
+    values: {furniture: 20, lighting: 18}
+
+  - id: friday_stock_on_hand
+    metric: stock_on_hand
+    cutoff: friday_review
+    total: 48

@@ -1,0 +1,90 @@
+# Recorded 2026-10-21 in a scratch copy of the repository (rsync, same warehouse and manifest), because the live eval run held the DuckDB lock on warehouse.duckdb. Command: ./sl compare "What did we make on paid search in the Friday review?"
+As of 2 October 2026 (demo clock). (Both use model qwen3.8-27b-nvfp4 at http://localhost:8001/v1/)
+
+========================================================================
+GOVERNED: router, semantic layer, response contract
+========================================================================
+[finance_lead] What did we make on paid search in the Friday review?
+  Category: supported   Path: governed
+  Answer: The Friday review put paid search at £50 of provisional contribution after advertising, made up of £120 from furniture and −£70 from lighting. That is contribution, not profit or cash received.
+    {'product_group': 'furniture', 'contribution_after_ads': 120}
+    {'product_group': 'lighting', 'contribution_after_ads': -70}
+  Filters: channel = paid_search (question)
+  Orders accepted: 2026-08-31 to 2026-09-03
+  Cutoff: friday_review (facts recorded by 06:00 BST on Friday 4 September 2026)
+  Lineage: contribution_after_ads v1, certified, owner finance lead, approver head of data, reviewed 2026-10-02
+  Caveat: Provisional contribution: neither cash received nor final profit. Overheads and payment-provider fees are left out; costs are estimates.
+  SQL: WITH sma_10003_cte AS ( SELECT DATE_TRUNC('day', accepted_date) AS metric_time__day , channel , product_group , cutoff_id AS cutoff , contribution_before_ads_paid_rule AS __contribution_before_ads_v1 , cost_unknown AS __lines_with_unknown_cost FROM "warehouse"."main"."fct_order_lines" order_lines_sr ...
+
+========================================================================
+WRAPPER: raw tables and its own SQL
+========================================================================
+
+--- Wrapper run 1 of 1 ---
+**£0 — the paid search trial broke even.**
+
+Breakdown for the trial (orders accepted 31 Aug–3 Sep, all 6 paid_search orders accepted):
+
+| Item | Amount |
+|---|---|
+| Revenue (goods value) | £1,500 |
+| Refunds (RF-001 £100 paid + RF-002 £50 goodwill, approved) | −£150 |
+| Product cost + fulfilment estimates | −£930 |
+| Ad spend (furniture £300 + lighting £120) | −£420 |
+| **Profit** | **£0** |
+
+Gross profit of £420 was exactly offset by £420 of ad spend.
+
+SQL it wrote:
+SELECT channel, status, COUNT(*) FROM orders GROUP BY 1,2
+
+SQL it wrote:
+SELECT * FROM ad_spend
+
+SQL it wrote:
+SELECT o.order_id, ol.product, ol.product_group, ol.quantity, ol.goods_value, ce.product_cost_estimate, ce.fulfilment_estimate, ce.cost_status
+FROM orders o JOIN order_lines ol ON o.order_id=ol.order_id
+LEFT JOIN cost_estimates ce ON ol.order_line_id=ce.order_line_id
+WHERE o.channel='paid_search'
+
+SQL it wrote:
+SELECT r.* FROM refunds r JOIN order_lines ol ON r.order_line_id=ol.order_line_id JOIN orders o ON ol.order_id=o.order_id WHERE o.channel='paid_search'
+
+SQL it wrote:
+SELECT p.* FROM payments p JOIN orders o ON p.order_id=o.order_id WHERE o.channel='paid_search' ORDER BY p.settled_at
+
+SQL it wrote:
+SELECT o.order_id, o.channel, o.status, SUM(ol.goods_value) goods, SUM(CASE WHEN p.direction='in' THEN p.amount END) paid_in, SUM(CASE WHEN p.direction='out' THEN p.amount END) paid_out
+FROM orders o JOIN order_lines ol ON o.order_id=ol.order_id
+LEFT JOIN payments p ON p.order_id=o.order_id
+GROUP BY 1,2,3 ORDER BY 1
+
+SQL it wrote:
+SELECT
+  SUM(ol.goods_value) revenue,
+  SUM(r.amount) refunds,
+  SUM(ce.product_cost_estimate + ce.fulfilment_estimate) costs,
+  SUM(a.amount) ad_spend
+FROM orders o
+JOIN order_lines ol ON o.order_id=ol.order_id
+LEFT JOIN cost_estimates ce ON ol.order_line_id=ce.order_line_id
+LEFT JOIN refunds r ON r.order_line_id=ol.order_line_id
+CROSS JOIN (SELECT SUM(amount) amount FROM ad_spend WHERE channel='paid_search') a
+WHERE o.channel='paid_search' AND o.status='accepted'
+
+SQL it wrote:
+SELECT
+  SUM(ol.goods_value) revenue,
+  (SELECT SUM(amount) FROM refunds r JOIN order_lines ol2 ON r.order_line_id=ol2.order_line_id JOIN orders o2 ON ol2.order_id=o2.order_id WHERE o2.channel='paid_search' AND r.event='paid') refunds_paid,
+  (SELECT SUM(amount) FROM refunds r JOIN order_lines ol2 ON r.order_line_id=ol2.order_line_id JOIN orders o2 ON ol2.order_id=o2.order_id WHERE o2.channel='paid_search' AND r.event='approved') refunds_approved,
+  SUM(ce.product_cost_estimate + ce.fulfilment_estimate) costs,
+  (SELECT SUM(amount) FROM ad_spend WHERE channel='paid_search') ad_spend
+FROM orders o
+JOIN order_lines ol ON o.order_id=ol.order_id
+JOIN cost_estimates ce ON ol.order_line_id=ce.order_line_id
+WHERE o.channel='paid_search' AND o.status='accepted'
+
+SQL it wrote:
+SELECT order_id, accepted_at, status FROM orders WHERE channel='paid_search' ORDER BY accepted_at
+
+Saved to runs/wrapper-2026-10-21-001904.json

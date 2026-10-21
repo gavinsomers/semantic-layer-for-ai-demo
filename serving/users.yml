@@ -1,0 +1,69 @@
+# Who may see what (guide chapter 7; book chapter 6).
+#
+# The identity comes from the session, never from the model: the MCP server
+# is started for one signed-in user (`sl mcp --user ...`) and the agent passes
+# the user to every tool call in code. These rules are enforced in
+# serving/tools.py (metrics), serving/layer.py (row filters become a MetricFlow
+# where clause) and serving/sql_guard.py (tables, columns and rows on the SQL
+# fallback). Nothing here is a prompt instruction.
+#
+# The people are roles from the book. The access rules are SYNTHETIC: the book
+# says sharing an order selection does not grant every measure built on it,
+# but does not set these exact grants.
+
+# The SQL fallback's ALLOW-list: for each table, the columns anyone may be
+# granted. Each user below names the tables they may read and, for each, the
+# columns allowed (the anchors keep each list in one place). A column not on a
+# user's list cannot be read, so a column added to a mart later stays closed
+# until someone grants it. email is on no list: personal data.
+sql_columns:
+  fct_order_lines: &order_line_columns
+    [snapshot_key, cutoff_id, cutoff_at, order_line_id, order_id, customer_id, accepted_at,
+     accepted_date, recorded_at, channel, product_group, product, quantity, goods_value,
+     promotion_count, refunds_paid, refunds_approved, cost_status, product_cost_estimate,
+     fulfilment_estimate, cost_unknown, contribution_before_ads_paid_rule,
+     contribution_before_ads_approved_rule]
+  fct_ad_spend: &ad_spend_columns
+    [snapshot_key, cutoff_id, ad_spend_id, channel, product_group, period_start, period_end,
+     advertising]
+  fct_cash_movements: &cash_columns
+    [snapshot_key, cutoff_id, payment_id, order_id, customer_id, channel, accepted_date,
+     direction, amount, signed_amount, settled_at]
+  fct_stock_daily: &stock_columns
+    [snapshot_key, cutoff_id, snapshot_date, observed_at, product, product_group, on_hand,
+     reserved, quarantined, available]
+  dim_customers: &customer_columns [customer_id, customer_type, region]
+
+users:
+
+  finance_lead:
+    description: Owns contribution, the refund rule and cash received. Sees everything.
+    deny_metrics: []
+    row_filters: {}
+    sql_tables:
+      fct_order_lines: *order_line_columns
+      fct_ad_spend: *ad_spend_columns
+      fct_cash_movements: *cash_columns
+      fct_stock_daily: *stock_columns
+      dim_customers: *customer_columns
+
+  commercial_lead:
+    description: Owns the trading review, accepted goods value and advertising. No cash measures.
+    deny_metrics: [cash_received]
+    row_filters: {}
+    sql_tables:
+      fct_order_lines: *order_line_columns
+      fct_ad_spend: *ad_spend_columns
+      fct_stock_daily: *stock_columns
+      dim_customers: *customer_columns
+
+  lighting_buyer:
+    description: Buys for the lighting group. Sees lighting rows only.
+    # No explicit deny: any metric that cannot carry the product_group filter
+    # (cash received belongs to whole orders) is refused by the row-filter check.
+    deny_metrics: []
+    row_filters: {product_group: lighting}
+    sql_tables:
+      fct_order_lines: *order_line_columns
+      fct_ad_spend: *ad_spend_columns
+      fct_stock_daily: *stock_columns

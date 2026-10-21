@@ -1,0 +1,34 @@
+# Sample questions for a drafted semantic model (guide chapter 5).
+#
+# The draft must answer each of these through MetricFlow with the expected
+# figure before a person is asked to review it. The figures were checked by
+# hand against the fct_refunds mart, and the first two are the book's lamp:
+# at the Friday cutoff its £50 goodwill refund was approved but unpaid.
+
+model: fct_refunds
+
+questions:
+  - question: Approved but unpaid refunds on paid-search orders at the Friday cutoff
+    metric: refunds_outstanding
+    where: {cutoff: friday_review, channel: paid_search}
+    expected: 50
+
+  - question: Refunds approved by the Friday cutoff on paid-search orders
+    metric: refunds_approved
+    where: {cutoff: friday_review, channel: paid_search}
+    expected: 150
+
+  - question: Approved but unpaid refunds at the 11 September cutoff
+    metric: refunds_outstanding
+    where: {cutoff: lamp_recalculation}
+    expected: 0
+
+  # Several order dates (31 August, 2 and 14 September): a metric that keeps
+  # only the latest date (a wrong non_additive_dimension on an additive amount)
+  # would give 55 here. Checked against fct_refunds: sum(amount_approved) at
+  # september_close is 100 + 50 + 40 + 55 = 245. The questions gate fails
+  # unless at least one question spans more than one date.
+  - question: Refunds approved by the September close, all channels
+    metric: refunds_approved
+    where: {cutoff: september_close}
+    expected: 245

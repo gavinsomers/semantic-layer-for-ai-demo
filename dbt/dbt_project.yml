@@ -1,0 +1,43 @@
+name: yellowhammer
+version: "1.0.0"
+config-version: 2
+profile: yellowhammer
+
+seed-paths: [seeds]
+model-paths: [models]
+test-paths: [tests]
+
+# Seed column types are set per seed, so every amount is an exact decimal and
+# every timestamp is a TIMESTAMPTZ: an instant, stored in UTC with its offset
+# ("2026-09-04 05:00:00+00:00"). Cutoffs are written in UK local time with
+# their zone and converted in stg_cutoffs; UK dates come from the uk_date macro.
+seeds:
+  yellowhammer:
+    customers:
+      +column_types: {customer_id: varchar}
+    cutoffs:
+      +column_types: {cutoff_local: timestamp, time_zone: varchar}
+    orders:
+      +column_types: {accepted_at: timestamptz, recorded_at: timestamptz}
+    order_lines:
+      +column_types: {goods_value: "decimal(10,2)"}
+    cost_estimates:
+      +column_types: {product_cost_estimate: "decimal(10,2)", fulfilment_estimate: "decimal(10,2)"}
+    refund_events:
+      +column_types: {amount: "decimal(10,2)", event_at: timestamptz, recorded_at: timestamptz}
+    payments:
+      +column_types: {amount: "decimal(10,2)", settled_at: timestamptz, recorded_at: timestamptz, refund_id: varchar}
+    ad_spend:
+      +column_types: {amount: "decimal(10,2)", period_start: date, period_end: date, recorded_at: timestamptz}
+    stock_snapshots:
+      +column_types: {observed_at: timestamptz, recorded_at: timestamptz}
+
+models:
+  yellowhammer:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
+
+flags:
+  send_anonymous_usage_stats: false

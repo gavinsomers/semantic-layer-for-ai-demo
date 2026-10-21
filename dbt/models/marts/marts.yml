@@ -1,0 +1,55 @@
+unit_tests:
+
+  # The lamp line, from the book: one line, two lamps, £200 of goods, £80
+  # product estimate, £20 fulfilment estimate. Lamp 1 came back: £100 refund,
+  # paid before the Friday cutoff. Lamp 2 was kept: £50 goodwill refund,
+  # approved before the cutoff, paid Tuesday 8 September 11:00, and that
+  # payment record reached the warehouse at 12:00.
+  # Same inputs for every test below; only the rule or the cutoff differs.
+  # Times are UK clock times with their offset (+01:00, BST): explicit, so the
+  # fixtures mean the same instant on any machine.
+
+  - name: lamp_line_paid_refund_rule_gives_0
+    description: "Version 1 at the Friday cutoff: £200 - £100 paid - £80 - £20 = £0. Fails if the unpaid £50 is deducted."
+    model: fct_order_lines
+    given: &lamp_line
+      - input: ref('stg_cutoffs')
+        rows:
+          - {cutoff_id: friday_review, cutoff_at: "2026-09-04 06:00:00+01:00"}
+          - {cutoff_id: before_record, cutoff_at: "2026-09-08 11:30:00+01:00"}
+          - {cutoff_id: lamp_recalculation, cutoff_at: "2026-09-11 06:00:00+01:00"}
+      - input: ref('stg_orders')
+        rows:
+          - {order_id: LAMP, customer_id: C1, accepted_at: "2026-08-31 14:05:00+01:00", channel: paid_search, status: accepted, recorded_at: "2026-08-31 14:10:00+01:00"}
+      - input: ref('stg_order_lines')
+        rows:
+          - {order_line_id: LAMP-1, order_id: LAMP, product: Table lamp, product_group: lighting, quantity: 2, goods_value: 200}
+      - input: ref('stg_cost_estimates')
+        rows:
+          - {order_line_id: LAMP-1, cost_status: estimated, product_cost_estimate: 80, fulfilment_estimate: 20}
+      - input: ref('stg_refund_events')
+        rows:
+          - {refund_id: R1, order_line_id: LAMP-1, event: approved, event_at: "2026-09-02 15:00:00+01:00", recorded_at: "2026-09-02 15:05:00+01:00", amount: 100}
+          - {refund_id: R1, order_line_id: LAMP-1, event: paid, event_at: "2026-09-03 10:30:00+01:00", recorded_at: "2026-09-03 10:35:00+01:00", amount: 100}
+          - {refund_id: R2, order_line_id: LAMP-1, event: approved, event_at: "2026-09-03 16:40:00+01:00", recorded_at: "2026-09-03 16:45:00+01:00", amount: 50}
+          - {refund_id: R2, order_line_id: LAMP-1, event: paid, event_at: "2026-09-08 11:00:00+01:00", recorded_at: "2026-09-08 12:00:00+01:00", amount: 50}
+      - input: ref('stg_order_promotions')
+        format: sql
+        rows: "select 'none' as order_id, 'none' as promotion_code where false"
+    expect:
+      rows:
+        - {cutoff_id: friday_review, contribution_before_ads_paid_rule: 0}
+        # 11:30 on 8 September: the 11:00 payment is not yet recorded, so it cannot count.
+        - {cutoff_id: before_record, contribution_before_ads_paid_rule: 0}
+        # 11 September: the £50 is now paid and recorded, so it counts.
+        - {cutoff_id: lamp_recalculation, contribution_before_ads_paid_rule: -50}
+
+  - name: lamp_line_approved_refund_rule_gives_minus_50
+    description: "Version 2: £200 - £150 approved - £80 - £20 = -£50, at every cutoff. Paying an already counted refund does not deduct it twice."
+    model: fct_order_lines
+    given: *lamp_line
+    expect:
+      rows:
+        - {cutoff_id: friday_review, contribution_before_ads_approved_rule: -50}
+        - {cutoff_id: before_record, contribution_before_ads_approved_rule: -50}
+        - {cutoff_id: lamp_recalculation, contribution_before_ads_approved_rule: -50}

@@ -1,0 +1,4 @@
+cutoff_id,cutoff_local,time_zone,description
+friday_review,2026-09-04 06:00:00,Europe/London,The Friday trading review: facts recorded by 06:00 on Friday 4 September 2026 (book)
+lamp_recalculation,2026-09-11 06:00:00,Europe/London,"Recalculation at a later cutoff, after the lamp's £50 refund was paid (book)"
+september_close,2026-10-01 06:00:00,Europe/London,Synthetic: everything recorded by 06:00 on Thursday 1 October 2026

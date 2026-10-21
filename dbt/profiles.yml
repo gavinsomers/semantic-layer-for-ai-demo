@@ -1,0 +1,15 @@
+# One local DuckDB file, in the repo root. Nothing leaves the laptop.
+yellowhammer:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: ../warehouse.duckdb
+      threads: 1
+      # UTC for the session, so no query depends on the laptop's time zone.
+      # UK dates and times are converted explicitly (macros/uk_time.sql).
+      settings:
+        TimeZone: UTC
+      # Time zones (timezone(), TIMESTAMPTZ to a UK date) need DuckDB's icu
+      # extension. DuckDB downloads it once, on the first build.
+      extensions: [icu]

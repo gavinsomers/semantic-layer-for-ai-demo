@@ -1,0 +1,67 @@
+# CANNED DRAFT, round 1 (offline mode of `sl draft`). A plausible first draft
+# of the kind an agent writes: it parses and validates, but it keys the model
+# on refund_id and leaves out the cutoff entity. fct_refunds holds one copy of
+# each refund per cutoff, so this draft cannot be limited to one cutoff and
+# counts every refund once per cutoff. The sample-question gate catches it.
+models:
+  - name: fct_refunds
+    description: One row per refund.
+    semantic_model:
+      enabled: true
+      name: refunds
+    agg_time_dimension: refund_accepted_date
+    columns:
+      - name: snapshot_key
+        data_tests: [unique, not_null]
+      - name: refund_id
+        entity: {type: primary, name: refund}
+      - name: order_id
+        entity: {type: foreign, name: order}
+      - name: channel
+        entity: {type: foreign, name: channel}
+      - name: product_group
+        entity: {type: foreign, name: product_group}
+      - name: accepted_date
+        granularity: day
+        dimension: {type: time, name: refund_accepted_date}
+      - name: refund_state
+        dimension: {type: categorical}
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [requested, approved, paid]
+
+    metrics:
+      - name: refunds_outstanding
+        label: Refunds approved but not yet paid
+        description: >
+          Unit: GBP. Refunds approved but not yet paid. Not for: refunds paid
+          (use refunds_paid).
+        type: simple
+        agg: sum
+        expr: amount_outstanding
+        config:
+          meta:
+            owner: finance lead
+            approver: head of data
+            status: draft
+            version: 1
+            last_reviewed: null              # set when a person approves the draft
+            unit: GBP
+
+      - name: refunds_approved
+        label: Refunds approved
+        description: >
+          Unit: GBP. Refunds approved, paid or not. Not for: cash refunded (use
+          cash_received).
+        type: simple
+        agg: sum
+        expr: amount_approved
+        config:
+          meta:
+            owner: finance lead
+            approver: head of data
+            status: draft
+            version: 1
+            last_reviewed: null              # set when a person approves the draft
+            unit: GBP

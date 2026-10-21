@@ -1,0 +1,29 @@
+{
+  "files": {
+    "context/ambiguity.yml": {
+      "reviewed_at": "2026-10-21",
+      "reviewed_by": "revision 2 held-out fixes, awaiting head of data",
+      "sha256": "664f9d186c850923968b265773a2e4520c190931947e5b375a78b9527872549f"
+    },
+    "context/instructions.md": {
+      "reviewed_at": "2026-10-21",
+      "reviewed_by": "revision 2 held-out fixes, awaiting head of data",
+      "sha256": "0b4e1806fe5aa2e8f2ce5b2ef253d47a9459decb6bd18770ba3b86067b668508"
+    },
+    "context/synonyms.yml": {
+      "reviewed_at": "2026-10-21",
+      "reviewed_by": "revision 2 held-out fixes, awaiting head of data",
+      "sha256": "a01f915b6a5eeeed8b5891ec8771c528e5bd65f74617f540c9433994829b8129"
+    },
+    "context/verified_queries.yml": {
+      "reviewed_at": "2026-10-20",
+      "reviewed_by": "head of data",
+      "sha256": "1b97cefe4d4e2567071f8fa244d26860e3a08944e3513fff26c3a1896881af28"
+    },
+    "dbt/models/semantic/semantic_layer.yml": {
+      "reviewed_at": "2026-10-21",
+      "reviewed_by": "revision 2 held-out fixes, awaiting head of data",
+      "sha256": "54ec79bd6c704fa7dc4de12fa25bb2fa24769b922ab85b734925ddda852dd5e3"
+    }
+  }
+}

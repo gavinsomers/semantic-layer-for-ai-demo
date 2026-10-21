@@ -1,0 +1,57 @@
+# CI for the semantic layer (guide chapter 6).
+#
+# The same steps, in the same order, as `uv run python -m sl ci` on a laptop
+# (sl.py CI_STEPS; tests/test_ci.py checks the two agree). No model server and
+# no cloud account: the warehouse is DuckDB, built from the frozen seeds.
+name: ci
+
+on:
+  pull_request:
+    # labeled/unlabeled: adding or removing breaking-change-approved re-runs the gate.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  push:
+    branches: [main]
+
+jobs:
+  semantic-layer:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUTF8: "1"
+      # A business owner can approve a breaking change by adding this label.
+      ALLOW_BREAKING_CHANGE: ${{ contains(github.event.pull_request.labels.*.name, 'breaking-change-approved') && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0               # the diff step parses the base branch in a worktree
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: uv sync
+        run: uv sync --locked
+
+      - name: build
+        run: uv run python -m sl build                # seeds, models, data tests, unit tests
+
+      - name: validate
+        if: ${{ !cancelled() }}
+        run: uv run python -m sl validate             # mf validate-configs, with warehouse checks
+
+      - name: pytest
+        if: ${{ !cancelled() }}
+        run: uv run python -m sl pytest               # Python tests, metric regression included
+
+      - name: evals-smoke
+        if: ${{ !cancelled() }}
+        run: uv run python -m sl evals --offline --smoke --min-accuracy 0.85
+
+      - name: check-lock
+        if: ${{ !cancelled() }}
+        run: uv run python -m sl check-lock           # no unreviewed edit to a reviewed file
+
+      - name: diff
+        if: ${{ !cancelled() }}
+        # On a pull request: against the base branch. On main: against the
+        # manifest recorded as in production by `sl release`.
+        run: >
+          uv run python -m sl diff --base
+          ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'change/production_manifest.json' }}

@@ -1,0 +1,158 @@
+# Verified queries (guide chapter 3).
+#
+# Each entry pairs the questions people actually ask with the exact request
+# that answers them, who checked the answer and when. The router matches a
+# question to these first. `expected` is what the answer was when verified
+# (every entry has one, checked against plain SQL on the marts):
+# tests/test_context.py re-runs every entry, so a model change that moves a
+# verified answer fails the build instead of surprising a user.
+#
+# kind: metric  -> a governed request to the semantic layer
+# kind: sql     -> verified read-only SQL for a question no metric covers yet
+#                  (still flagged as the SQL fallback path in the contract)
+
+verified_queries:
+
+  - id: vq_contribution_friday_review
+    questions:
+      - What did we make on paid search in the Friday review?
+      - What was paid-search contribution for the trial's first four days?
+      - What is our paid-search contribution, and does it include the refund we have promised?
+    kind: metric
+    request:
+      metric: contribution_after_ads
+      group_by: [product_group]
+      filters: {channel: paid_search}
+      start: "2026-08-31"
+      end: "2026-09-03"
+      cutoff: friday_review
+    expected: {total: 50, furniture: 120, lighting: -70}
+    category: supported
+    verified_by: finance lead
+    verified_at: "2026-10-02"
+
+  - id: vq_approved_refund_comparison
+    questions:
+      - What if we count approved refunds?
+      - What would contribution be under the approved-refund rule?
+    kind: metric
+    request:
+      metric: contribution_after_ads_v2
+      group_by: [product_group]
+      filters: {channel: paid_search}
+      start: "2026-08-31"
+      end: "2026-09-03"
+      cutoff: friday_review
+    expected: {total: 0, furniture: 120, lighting: -120}
+    category: constrained        # answerable only as a labelled comparison
+    verified_by: finance lead
+    verified_at: "2026-10-02"
+
+  - id: vq_cash_friday_review
+    questions:
+      - How much cash came in for the paid-search orders in the Friday review?
+      - How much cash came in for those orders?
+    kind: metric
+    request:
+      metric: cash_received
+      filters: {channel: paid_search}
+      start: "2026-08-31"
+      end: "2026-09-03"
+      cutoff: friday_review
+    expected: {total: 1200}
+    category: supported
+    verified_by: finance lead
+    verified_at: "2026-10-02"
+
+  - id: vq_goods_value_by_channel_september
+    questions:
+      - What were sales by channel in September?
+      - What was accepted goods value by channel in September?
+    kind: metric
+    request:
+      metric: goods_value
+      group_by: [channel]
+      start: "2026-09-01"
+      end: "2026-09-30"
+      cutoff: september_close
+    expected: {total: 4145}
+    category: supported
+    verified_by: commercial lead
+    verified_at: "2026-10-02"
+
+  - id: vq_average_order_value_by_region
+    questions:
+      - What is average order value by customer region?
+      - What is AOV by region?
+    kind: metric
+    request:
+      metric: average_order_value
+      group_by: [customer__region]
+      cutoff: september_close
+    # Every order at the September close, all dates (no window asked for).
+    expected: {total: 272.7273, London: 230, Midlands: 45, North West: 250, Scotland: 303.75,
+               South East: 331.25, South West: 386.6667, Wales: 315, Yorkshire: 185}
+    category: supported
+    verified_by: commercial lead
+    verified_at: "2026-10-02"
+
+  - id: vq_stock_available_friday
+    questions:
+      - How many units were available to sell by product group at the Friday review?
+    kind: metric
+    request:
+      metric: stock_available
+      group_by: [product_group]
+      cutoff: friday_review
+    expected: {total: 38, furniture: 20, lighting: 18}
+    category: supported
+    verified_by: operations lead
+    verified_at: "2026-10-02"
+
+  - id: vq_goods_value_month_to_date
+    questions:
+      - What was month-to-date goods value each day in September?
+    kind: metric
+    request:
+      metric: goods_value_mtd
+      group_by: [metric_time__day]
+      start: "2026-09-01"
+      end: "2026-09-30"
+      cutoff: september_close
+    # A running total has no single total; these are the running figures on four days.
+    expected: {total: null, "2026-09-01 00:00:00": 640, "2026-09-03 00:00:00": 1460,
+               "2026-09-15 00:00:00": 2615, "2026-09-30 00:00:00": 4145}
+    category: supported
+    verified_by: commercial lead
+    verified_at: "2026-10-02"
+
+  # Added when the "orders with a promotion" fallback cluster was promoted to
+  # a governed metric (guide ch 10).
+  - id: vq_orders_with_promotion_september
+    questions:
+      - How many orders with a promotion did we have in September?
+      - How many promotion orders were there in September?
+    kind: metric
+    request:
+      metric: orders_with_promotion
+      start: "2026-09-01"
+      end: "2026-09-30"
+      cutoff: september_close
+    expected: {total: 4}
+    category: supported
+    verified_by: commercial lead
+    verified_at: "2026-10-02"
+
+  - id: vq_sql_orders_with_several_promotions
+    questions:
+      - How many orders used more than one promotion?
+    kind: sql
+    sql: >
+      select count(distinct order_id) as orders_with_several_promotions
+      from fct_order_lines
+      where promotion_count > 1
+    cutoff: september_close
+    expected: {total: 2}
+    category: constrained        # no governed metric yet: a candidate for one
+    verified_by: commercial lead
+    verified_at: "2026-10-02"

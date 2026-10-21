@@ -1,0 +1,54 @@
+# Who relies on which metric (guide chapter 9). change/impact.py reads this
+# to say whom a change reaches, and the agent owners here are told when a
+# metric they use is deprecated.
+#
+# The register fields follow the book (chapter 9):
+#   purpose        what the consumer is for, in one line
+#   kind           exploratory (people asking questions), operational (a
+#                  recurring report or process), or customer-facing
+#   pinned_until   a consumer may stay on a deprecated version until this date
+#   pin_reason     why it is pinned (null when it is not)
+#   surface        how it reaches people: dashboard, agent, spreadsheet
+#
+# SYNTHETIC: these consumers are illustrations for the demo, not Yellowhammer
+# records. The book registers assistants by owner and class (chapter 9); it does
+# not list these dashboards or packs.
+
+consumers:
+
+  - id: trading_review_dashboard
+    surface: dashboard
+    kind: operational
+    owner: commercial lead
+    purpose: The Friday trading review's figures, week by week.
+    metrics: [goods_value, contribution_after_ads, advertising, order_count, average_order_value]
+    pinned_until: null
+    pin_reason: null
+
+  - id: trading_review_assistant
+    surface: agent
+    kind: exploratory
+    owner: commercial lead
+    purpose: Answers trading questions through serving/agent.py.
+    metrics: [contribution_after_ads, contribution_after_ads_v2, cash_received, goods_value]
+    pinned_until: null
+    pin_reason: null
+    notes: Passes deprecation notices on as caveats.
+
+  - id: finance_month_end_pack
+    surface: spreadsheet
+    kind: operational
+    owner: finance lead
+    purpose: The month-end pack, including the September close.
+    metrics: [cash_received, refunds_paid, refund_rate, contribution_after_ads]
+    pinned_until: "2026-10-31"
+    pin_reason: September is reported under the paid-refund rule (version 1) until the close is signed off.
+
+  - id: operations_stock_report
+    surface: dashboard
+    kind: operational
+    owner: operations lead
+    purpose: Daily stock positions for allocation.
+    metrics: [stock_on_hand, stock_available]
+    pinned_until: null
+    pin_reason: null

@@ -1,0 +1,99 @@
+# Categories and ambiguity rules (guide chapter 3; book chapter 4).
+#
+# Every question falls into one of three categories, and each has one kind
+# of reply:
+#
+#   supported    a recorded definition answers it        -> a direct answer
+#   constrained  answerable only with a condition: one   -> one specific question,
+#                ambiguity changes which calculation       or an answer with the
+#                runs, or part of it cannot be answered    condition stated
+#   unsupported  no definition can answer it (causes,    -> can't answer, with the
+#                forecasts, advice, personal data)          reason; nothing is queried
+#
+# The router (serving/router.py) applies these rules in code, before any query.
+
+categories: [supported, constrained, unsupported]
+
+# Questions with two defensible answers. policy: ask -> one named-choice
+# question, nothing runs. policy: default -> answer with the default and say so.
+# unless_any: words that settle the meaning (in the Friday review, "make"
+# already means contribution).
+ambiguities:
+
+  - id: profit
+    terms: [profit, profits, margin, bottom line, earnings]
+    policy: ask
+    clarifying_question: >
+      Yellowhammer has no recorded definition of profit. Do you mean provisional
+      contribution after advertising (which leaves out overheads and rests on cost
+      estimates, so is not final profit) or accepted goods value?
+    options: [contribution_after_ads, goods_value]
+
+  - id: make_cold
+    terms: [make, made, earn, earned, bring in, brought in]
+    unless_any: [review, contribution, trial]
+    policy: ask
+    clarifying_question: Do you mean accepted goods value, contribution or cash received?
+    options: [goods_value, contribution_after_ads, cash_received]
+    default_in_context: contribution_after_ads
+
+  - id: revenue
+    terms: [revenue, turnover, takings]
+    policy: ask
+    clarifying_question: Do you mean accepted goods value (orders accepted) or cash received (payments settled)?
+    options: [goods_value, cash_received]
+
+  - id: stock
+    terms: [stock, inventory]
+    unless_any: [available, on hand]
+    policy: default
+    default: stock_available
+    caveat: >
+      You asked about stock. This is units available to sell (on hand less
+      reserved and quarantined). Stock on hand would be a higher figure.
+
+# Requests a definition cannot support: answer the part it can, say why.
+constraints:
+  - id: no_split_below_group
+    applies_to: [contribution_after_ads, contribution_after_ads_v2, advertising, cash_received]
+    reason_by_metric:
+      cash_received: Payments belong to whole orders, and nobody has agreed how to split them.
+      default: Advertising is recorded for whole product groups, and nobody has agreed a rule for sharing it out.
+
+  # Until its effective_from date (on the demo clock): the answer is marked
+  # constrained, and the metric's own caveat (serving/tools.py) says why.
+  - id: comparison_only
+    applies_to: [contribution_after_ads_v2]
+
+# Never queried. Checked first, as regular expressions on the lower-cased question.
+unsupported:
+  - id: prompt_injection
+    patterns: ["ignore (all|any|previous|the) .*instructions", "system prompt", "you are now", "developer mode"]
+    reason: The question asks the assistant to change its rules, which it cannot do.
+  - id: cause
+    patterns: ["^why\\b", "\\bwhy (did|do|does|is|was|has)\\b", "\\bcaused?\\b", "\\bbecause of\\b", "\\bdriven by\\b"]
+    reason: The definitions give figures, not causes; there is no recorded explanation of why a figure moved.
+    offer: The figure itself, by product group, for the period you name.
+  - id: forecast
+    patterns: ["\\bforecast", "\\bpredict", "\\bnext (month|week|year|quarter)\\b", "\\bwill we\\b", "\\bprojected?\\b"]
+    reason: The layer holds recorded facts, not forecasts, and four days of a trial cannot be scaled up.
+  - id: advice
+    patterns: ["\\bshould we\\b", "\\bshould i\\b", "\\brecommend", "\\bworth (it|keeping)\\b"]
+    reason: Whether to act is the asker's judgement; the assistant reports figures and their basis.
+  - id: personal_data
+    patterns: ["\\bemails?\\b.*customer", "customer.*\\bemails?\\b", "\\baddress(es)?\\b", "phone numbers?"]
+    reason: Customer contact details are personal data and are never shown.
+
+# Phrases that ask to reproduce a report already made, rather than for a
+# current figure. Such a question keeps the version the report used, and is
+# answered even while a metric is on hold (guide ch 9).
+past_reports: [friday review, trading review, as reported, reproduce]
+
+# Versions (guide ch 9; book ch 8). Which version answers a CURRENT question
+# on the demo clock's date (serving/clock.py): the successor once its meta
+# effective_from has come. A question that names a past report, or the old
+# rule, still gets the old version, so the report can be reproduced.
+versions:
+  - metric: contribution_after_ads              # version 1, paid-refund rule
+    successor: contribution_after_ads_v2        # version 2, from its meta effective_from
+    reproduce_when_any: [paid refund rule]      # as well as past_reports

@@ -1,0 +1,30 @@
+[project]
+name = "semantic-layer-for-ai-demo"
+version = "0.1.0"
+description = "Yellowhammer: a local, runnable semantic layer for AI (dbt + MetricFlow + DuckDB, an MCP server, a response contract and access control)."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # The semantic layer stack, proven together on DuckDB: pinned exactly.
+    "dbt-core==1.12.6",
+    "dbt-duckdb==1.11.0",
+    "dbt-metricflow==0.15.0",
+    "metricflow==0.213.0",
+    "dbt-semantic-interfaces==0.10.5",
+    "duckdb==1.5.5",
+    # Serving: an OpenAI-compatible client, the MCP SDK, a SQL parser, schema checks.
+    "openai==2.53.0",
+    "mcp==1.30.0",  # 1.x keeps FastMCP; 2.x renamed it
+    "sqlglot==30.23.0",
+    "jsonschema==4.26.0",
+    "pyyaml==6.0.3",
+    "tzdata==2026.5",  # time zone data for zoneinfo on Windows (Linux and macOS have it)
+    "pytest==8.4.2",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["slow: builds a scratch copy of the project (still runs by default)"]

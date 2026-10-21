@@ -1,0 +1,10 @@
+refund_id,order_line_id,event,event_at,recorded_at,amount,reason
+RF-001,YH-1002-1,approved,2026-09-02 14:00:00+00:00,2026-09-02 14:05:00+00:00,100.00,Lamp 1 returned
+RF-001,YH-1002-1,paid,2026-09-03 09:30:00+00:00,2026-09-03 09:35:00+00:00,100.00,Lamp 1 returned
+RF-002,YH-1002-1,approved,2026-09-03 15:40:00+00:00,2026-09-03 15:45:00+00:00,50.00,Goodwill: lamp 2 wrong colour and kept; approved by the finance lead
+RF-002,YH-1002-1,paid,2026-09-08 10:00:00+00:00,2026-09-08 11:00:00+00:00,50.00,Goodwill: lamp 2 wrong colour and kept; approved by the finance lead
+RF-101,YH-2004-1,requested,2026-08-20 08:00:00+00:00,2026-08-20 08:05:00+00:00,60.00,Synthetic: customer asked about a scratch; never approved
+RF-102,YH-2008-1,approved,2026-09-05 09:00:00+00:00,2026-09-05 09:05:00+00:00,40.00,Synthetic: goodwill for late delivery
+RF-102,YH-2008-1,paid,2026-09-07 14:00:00+00:00,2026-09-07 14:05:00+00:00,40.00,Synthetic: goodwill for late delivery
+RF-103,YH-2013-2,approved,2026-09-16 10:00:00+00:00,2026-09-16 10:05:00+00:00,55.00,Synthetic: wall light returned
+RF-103,YH-2013-2,paid,2026-09-17 08:30:00+00:00,2026-09-17 08:35:00+00:00,55.00,Synthetic: wall light returned

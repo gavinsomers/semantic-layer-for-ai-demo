@@ -1,0 +1,76 @@
+# The staleness test (revision 2; guide chapter 8): does a hand-written
+# context file go stale when a definition changes, while the layer stays right?
+#
+# `sl evals --stale-context clock|rule` runs these cases in a scratch copy
+# after changing what contribution means (evals/run.py explains the two
+# scenarios). In both, the approved-refund rule (contribution_after_ads_v2) is
+# the rule for CURRENT answers, and the paid-refund rule (version 1) answers
+# only questions that name a past report or the old rule. Nobody regenerates
+# evals/context/annotated.md or context/instructions.md: both still say version
+# 1 is in force until 5 October.
+#
+# The figures differ between the rules only at the Friday cutoff (the lamp's
+# £50 refund was approved but not yet paid): version 1 £50 (lighting −£70),
+# version 2 £0 (lighting −£120). The expectations below are for the changed
+# definition. The format is evals/cases.yml's. Only the control (st05, the
+# Friday review) checks the group figures, as its twin s01 does.
+
+cases:
+
+  - id: st01_current_contribution
+    split: stale
+    category: supported
+    question: What was paid-search contribution for the trial's first four days?
+    expect:
+      behaviour: answer
+      metric: contribution_after_ads_v2
+      total: 0
+      filters: {channel: paid_search}
+    tags: [stale]
+
+  - id: st02_lamp_lighting_current
+    split: stale
+    category: supported
+    question: What was lighting's paid-search contribution for the trial's first four days?
+    expect:
+      behaviour: answer
+      metric: contribution_after_ads_v2
+      total: -120
+      filters: {channel: paid_search}
+    tags: [stale]
+
+  - id: st03_count_approved_refunds
+    split: stale
+    category: constrained
+    question: What if we count approved refunds?
+    expect:
+      behaviour: answer
+      metric: contribution_after_ads_v2
+      total: 0
+      # the approved-refund rule is now the rule: calling it "not in force" is stale
+      must_not_say: [not in force, not the rule in force, not yet in force, until 5 october, until 2026-10-05]
+    tags: [stale]
+
+  - id: st04_paid_rule_comparison
+    split: stale
+    category: constrained
+    question: What would paid-search contribution for the trial's first four days be under the paid-refund rule?
+    expect:
+      behaviour: caveat
+      metric: contribution_after_ads
+      total: 50
+      caveat_any: [was the rule, no longer, previous rule, old rule, replaced, reproduces, comparison, current answers use, superseded, version 2]
+      must_not_say: [is the rule in force, is still the rule, currently in force, remains in force]
+    tags: [stale]
+
+  - id: st05_friday_review_control
+    split: stale
+    category: supported
+    question: What did we make on paid search in the Friday review?
+    expect:
+      behaviour: answer
+      metric: contribution_after_ads
+      total: 50
+      values: {furniture: 120, lighting: -70}
+      filters: {channel: paid_search, cutoff: friday_review}
+    tags: [stale, control]

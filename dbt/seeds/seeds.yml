@@ -1,0 +1,36 @@
+# Raw tables, as the shop's systems recorded them.
+#
+# WHICH DATA IS FROM THE BOOK. The paid-search orders YH-1001 to YH-1006, their
+# lines, cost estimates, payments, the lamp line's two refunds, advertising
+# AD-001 and AD-002, the sofa stock observation on 4 September and the cutoffs
+# friday_review and lamp_recalculation carry the book's figures. The book states
+# only the totals (goods £1,500, paid refunds £100, estimates £930, advertising
+# £420, cash £1,300 collected less £100 refunded), the lamp line and the sofa
+# stock position; the split of those totals across lines and orders is
+# illustrative. EVERYTHING ELSE IS SYNTHETIC: customers, every order numbered
+# YH-2xxx, promotions, the other refunds, other stock observations, the
+# september_close cutoff and all recorded_at times not given by the book.
+
+seeds:
+  - name: customers
+    description: "SYNTHETIC. One row per customer. email is personal data: never shown to an assistant."
+  - name: cutoffs
+    description: "Named cutoffs. A cutoff limits which recorded facts a calculation may use."
+  - name: orders
+    description: "One row per order. recorded_at is when the record reached the warehouse. YH-2xxx are SYNTHETIC."
+  - name: order_lines
+    description: "One row per order line. goods_value is already the total for the line (net of VAT and delivery fees)."
+  - name: cost_estimates
+    description: "One row per order line. cost_status is 'estimated' or 'unknown'; an unknown cost is left empty, never 0."
+  - name: refund_events
+    description: "One row per refund event (requested, approved, paid). amount is always positive: a refund is money going out."
+  - name: payments
+    description: "One row per money movement on a whole order. amount is always positive; direction says which way ('in' collected, 'out' refunded)."
+  - name: ad_spend
+    description: "Advertising per channel, whole product group and period. Never split below product group."
+  - name: promotions
+    description: "SYNTHETIC. One row per promotion code."
+  - name: order_promotions
+    description: "SYNTHETIC. Link table: an order can carry several promotions. Joining it to order lines naively repeats each line."
+  - name: stock_snapshots
+    description: "Stock observations per product. The 4 September sofa row is from the book; the rest are SYNTHETIC."

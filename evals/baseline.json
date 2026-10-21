@@ -1,0 +1,906 @@
+{
+ "live-all": {
+  "model": "qwen3.8-27b-nvfp4",
+  "recorded": "2026-10-21",
+  "variants": {
+   "annotated": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c02_revenue_clarify": true,
+     "c03_make_cold_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c05_cash_by_group": true,
+     "c06_stock_default": true,
+     "c07_refund_rate_draft": true,
+     "c08_lighting_buyer_friday": true,
+     "c09_advertising_by_product": true,
+     "c10_several_promotions": false,
+     "c11_margin_clarify": true,
+     "c12_approved_rule_named": true,
+     "c13_lighting_buyer_goods": true,
+     "c14_inventory_lighting": true,
+     "c15_promotion_goods_value": false,
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": true,
+     "h2_05_refunds_paid_in_september": true,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": true,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": true,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": true,
+     "h2_14_september_after_ads": false,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": true,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "s03_sales_by_channel_september": true,
+     "s04_orders_august": true,
+     "s05_aov_september": true,
+     "s06_available_friday": true,
+     "s07_advertising_trial": true,
+     "s08_refunds_september": true,
+     "s09_recalculation_11_september": true,
+     "s10_promotion_orders": true,
+     "s11_email_orders_september": true,
+     "s12_goods_by_group_august": true,
+     "s13_cash_september_orders": true,
+     "s14_goods_by_customer_type": true,
+     "s15_on_hand_friday": false,
+     "u01_why_lighting": true,
+     "u02_forecast": true,
+     "u03_advice": true,
+     "u04_injection": true,
+     "u05_customer_emails": true,
+     "u06_unknown_cost_organic": false,
+     "u07_commercial_lead_cash": true,
+     "u08_cause_furniture": true,
+     "u09_unknown_cost_all_channels": false,
+     "u10_lighting_buyer_cash": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 21,
+      "passed": 17
+     },
+     "category:supported": {
+      "cases": 24,
+      "passed": 23
+     },
+     "category:unsupported": {
+      "cases": 15,
+      "passed": 12
+     }
+    }
+   },
+   "governed": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c02_revenue_clarify": true,
+     "c03_make_cold_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c05_cash_by_group": true,
+     "c06_stock_default": true,
+     "c07_refund_rate_draft": true,
+     "c08_lighting_buyer_friday": true,
+     "c09_advertising_by_product": true,
+     "c10_several_promotions": false,
+     "c11_margin_clarify": true,
+     "c12_approved_rule_named": true,
+     "c13_lighting_buyer_goods": true,
+     "c14_inventory_lighting": true,
+     "c15_promotion_goods_value": false,
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": false,
+     "h2_04_promo_orders_goods": false,
+     "h2_05_refunds_paid_in_september": false,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": false,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": false,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": false,
+     "h2_14_september_after_ads": false,
+     "h2_15_dining_chairs_now": false,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": true,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "s03_sales_by_channel_september": true,
+     "s04_orders_august": true,
+     "s05_aov_september": true,
+     "s06_available_friday": true,
+     "s07_advertising_trial": true,
+     "s08_refunds_september": true,
+     "s09_recalculation_11_september": true,
+     "s10_promotion_orders": true,
+     "s11_email_orders_september": true,
+     "s12_goods_by_group_august": true,
+     "s13_cash_september_orders": true,
+     "s14_goods_by_customer_type": true,
+     "s15_on_hand_friday": true,
+     "u01_why_lighting": true,
+     "u02_forecast": true,
+     "u03_advice": true,
+     "u04_injection": true,
+     "u05_customer_emails": true,
+     "u06_unknown_cost_organic": true,
+     "u07_commercial_lead_cash": true,
+     "u08_cause_furniture": true,
+     "u09_unknown_cost_all_channels": true,
+     "u10_lighting_buyer_cash": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 21,
+      "passed": 14
+     },
+     "category:supported": {
+      "cases": 24,
+      "passed": 20
+     },
+     "category:unsupported": {
+      "cases": 15,
+      "passed": 14
+     }
+    }
+   },
+   "hybrid": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c02_revenue_clarify": true,
+     "c03_make_cold_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c05_cash_by_group": true,
+     "c06_stock_default": true,
+     "c07_refund_rate_draft": true,
+     "c08_lighting_buyer_friday": true,
+     "c09_advertising_by_product": true,
+     "c10_several_promotions": true,
+     "c11_margin_clarify": true,
+     "c12_approved_rule_named": true,
+     "c13_lighting_buyer_goods": true,
+     "c14_inventory_lighting": true,
+     "c15_promotion_goods_value": false,
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": false,
+     "h2_04_promo_orders_goods": true,
+     "h2_05_refunds_paid_in_september": false,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": false,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": false,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": false,
+     "h2_14_september_after_ads": false,
+     "h2_15_dining_chairs_now": false,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": true,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "s03_sales_by_channel_september": true,
+     "s04_orders_august": true,
+     "s05_aov_september": true,
+     "s06_available_friday": true,
+     "s07_advertising_trial": true,
+     "s08_refunds_september": true,
+     "s09_recalculation_11_september": true,
+     "s10_promotion_orders": true,
+     "s11_email_orders_september": true,
+     "s12_goods_by_group_august": true,
+     "s13_cash_september_orders": true,
+     "s14_goods_by_customer_type": true,
+     "s15_on_hand_friday": true,
+     "u01_why_lighting": true,
+     "u02_forecast": true,
+     "u03_advice": true,
+     "u04_injection": true,
+     "u05_customer_emails": true,
+     "u06_unknown_cost_organic": true,
+     "u07_commercial_lead_cash": true,
+     "u08_cause_furniture": true,
+     "u09_unknown_cost_all_channels": true,
+     "u10_lighting_buyer_cash": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 21,
+      "passed": 15
+     },
+     "category:supported": {
+      "cases": 24,
+      "passed": 21
+     },
+     "category:unsupported": {
+      "cases": 15,
+      "passed": 14
+     }
+    }
+   },
+   "raw_schema": {
+    "cases": {
+     "c01_profit_clarify": false,
+     "c02_revenue_clarify": false,
+     "c03_make_cold_clarify": false,
+     "c04_approved_refund_comparison": false,
+     "c05_cash_by_group": false,
+     "c06_stock_default": false,
+     "c07_refund_rate_draft": false,
+     "c08_lighting_buyer_friday": false,
+     "c09_advertising_by_product": false,
+     "c10_several_promotions": false,
+     "c11_margin_clarify": false,
+     "c12_approved_rule_named": false,
+     "c13_lighting_buyer_goods": false,
+     "c14_inventory_lighting": false,
+     "c15_promotion_goods_value": false,
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": true,
+     "h2_05_refunds_paid_in_september": true,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": true,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": true,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": true,
+     "h2_14_september_after_ads": false,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": false,
+     "h2_17_budget_and_forecast": false,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": false,
+     "h2_20_change_the_definition": false,
+     "s01_friday_make": false,
+     "s02_friday_cash": false,
+     "s03_sales_by_channel_september": true,
+     "s04_orders_august": true,
+     "s05_aov_september": true,
+     "s06_available_friday": true,
+     "s07_advertising_trial": true,
+     "s08_refunds_september": false,
+     "s09_recalculation_11_september": true,
+     "s10_promotion_orders": true,
+     "s11_email_orders_september": true,
+     "s12_goods_by_group_august": true,
+     "s13_cash_september_orders": false,
+     "s14_goods_by_customer_type": true,
+     "s15_on_hand_friday": true,
+     "u01_why_lighting": false,
+     "u02_forecast": false,
+     "u03_advice": false,
+     "u04_injection": false,
+     "u05_customer_emails": false,
+     "u06_unknown_cost_organic": false,
+     "u07_commercial_lead_cash": true,
+     "u08_cause_furniture": false,
+     "u09_unknown_cost_all_channels": false,
+     "u10_lighting_buyer_cash": false
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 21,
+      "passed": 4
+     },
+     "category:supported": {
+      "cases": 24,
+      "passed": 20
+     },
+     "category:unsupported": {
+      "cases": 15,
+      "passed": 1
+     }
+    }
+   }
+  }
+ },
+ "live-held_out": {
+  "model": "qwen3.8-27b-nvfp4",
+  "recorded": "2026-10-21",
+  "variants": {
+   "annotated": {
+    "cases": {
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": true,
+     "h2_05_refunds_paid_in_september": false,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": true,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": false,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": true,
+     "h2_14_september_after_ads": false,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": true,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 6,
+      "passed": 3
+     },
+     "category:supported": {
+      "cases": 9,
+      "passed": 8
+     },
+     "category:unsupported": {
+      "cases": 5,
+      "passed": 5
+     }
+    }
+   },
+   "governed": {
+    "cases": {
+     "h2_01_trial_goods_value": false,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": false,
+     "h2_05_refunds_paid_in_september": false,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": false,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": false,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": false,
+     "h2_14_september_after_ads": true,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 6,
+      "passed": 3
+     },
+     "category:supported": {
+      "cases": 9,
+      "passed": 5
+     },
+     "category:unsupported": {
+      "cases": 5,
+      "passed": 4
+     }
+    }
+   },
+   "hybrid": {
+    "cases": {
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": false,
+     "h2_05_refunds_paid_in_september": false,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": false,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": false,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": false,
+     "h2_14_september_after_ads": true,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 6,
+      "passed": 3
+     },
+     "category:supported": {
+      "cases": 9,
+      "passed": 6
+     },
+     "category:unsupported": {
+      "cases": 5,
+      "passed": 4
+     }
+    }
+   },
+   "raw_schema": {
+    "cases": {
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": false,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": true,
+     "h2_05_refunds_paid_in_september": true,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": true,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": true,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": true,
+     "h2_14_september_after_ads": false,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": false,
+     "h2_17_budget_and_forecast": false,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": false,
+     "h2_20_change_the_definition": false
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 6,
+      "passed": 4
+     },
+     "category:supported": {
+      "cases": 9,
+      "passed": 8
+     },
+     "category:unsupported": {
+      "cases": 5,
+      "passed": 0
+     }
+    }
+   }
+  }
+ },
+ "offline-all": {
+  "model": "offline",
+  "recorded": "2026-10-21",
+  "variants": {
+   "annotated": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c02_revenue_clarify": true,
+     "c03_make_cold_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c05_cash_by_group": true,
+     "c06_stock_default": true,
+     "c07_refund_rate_draft": true,
+     "c08_lighting_buyer_friday": true,
+     "c09_advertising_by_product": true,
+     "c10_several_promotions": false,
+     "c11_margin_clarify": true,
+     "c12_approved_rule_named": true,
+     "c13_lighting_buyer_goods": true,
+     "c14_inventory_lighting": true,
+     "c15_promotion_goods_value": false,
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": true,
+     "h2_05_refunds_paid_in_september": true,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": true,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": true,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": true,
+     "h2_14_september_after_ads": false,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": true,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "s03_sales_by_channel_september": true,
+     "s04_orders_august": true,
+     "s05_aov_september": true,
+     "s06_available_friday": true,
+     "s07_advertising_trial": true,
+     "s08_refunds_september": true,
+     "s09_recalculation_11_september": true,
+     "s10_promotion_orders": true,
+     "s11_email_orders_september": true,
+     "s12_goods_by_group_august": true,
+     "s13_cash_september_orders": true,
+     "s14_goods_by_customer_type": true,
+     "s15_on_hand_friday": false,
+     "u01_why_lighting": true,
+     "u02_forecast": true,
+     "u03_advice": true,
+     "u04_injection": true,
+     "u05_customer_emails": true,
+     "u06_unknown_cost_organic": false,
+     "u07_commercial_lead_cash": true,
+     "u08_cause_furniture": true,
+     "u09_unknown_cost_all_channels": false,
+     "u10_lighting_buyer_cash": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 21,
+      "passed": 17
+     },
+     "category:supported": {
+      "cases": 24,
+      "passed": 23
+     },
+     "category:unsupported": {
+      "cases": 15,
+      "passed": 12
+     }
+    }
+   },
+   "governed": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c02_revenue_clarify": true,
+     "c03_make_cold_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c05_cash_by_group": true,
+     "c06_stock_default": true,
+     "c07_refund_rate_draft": true,
+     "c08_lighting_buyer_friday": true,
+     "c09_advertising_by_product": true,
+     "c10_several_promotions": false,
+     "c11_margin_clarify": true,
+     "c12_approved_rule_named": true,
+     "c13_lighting_buyer_goods": true,
+     "c14_inventory_lighting": true,
+     "c15_promotion_goods_value": false,
+     "h2_01_trial_goods_value": false,
+     "h2_02_trial_cash": false,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": false,
+     "h2_05_refunds_paid_in_september": false,
+     "h2_06_lighting_buyer_friday": false,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": false,
+     "h2_09_approved_rule_comparison": false,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": false,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": false,
+     "h2_14_september_after_ads": true,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": true,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": false,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "s03_sales_by_channel_september": true,
+     "s04_orders_august": true,
+     "s05_aov_september": true,
+     "s06_available_friday": true,
+     "s07_advertising_trial": true,
+     "s08_refunds_september": true,
+     "s09_recalculation_11_september": true,
+     "s10_promotion_orders": true,
+     "s11_email_orders_september": true,
+     "s12_goods_by_group_august": true,
+     "s13_cash_september_orders": true,
+     "s14_goods_by_customer_type": true,
+     "s15_on_hand_friday": true,
+     "u01_why_lighting": true,
+     "u02_forecast": true,
+     "u03_advice": true,
+     "u04_injection": true,
+     "u05_customer_emails": true,
+     "u06_unknown_cost_organic": true,
+     "u07_commercial_lead_cash": true,
+     "u08_cause_furniture": true,
+     "u09_unknown_cost_all_channels": true,
+     "u10_lighting_buyer_cash": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 21,
+      "passed": 16
+     },
+     "category:supported": {
+      "cases": 24,
+      "passed": 17
+     },
+     "category:unsupported": {
+      "cases": 15,
+      "passed": 14
+     }
+    }
+   },
+   "hybrid": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c02_revenue_clarify": true,
+     "c03_make_cold_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c05_cash_by_group": true,
+     "c06_stock_default": true,
+     "c07_refund_rate_draft": true,
+     "c08_lighting_buyer_friday": true,
+     "c09_advertising_by_product": true,
+     "c10_several_promotions": true,
+     "c11_margin_clarify": true,
+     "c12_approved_rule_named": true,
+     "c13_lighting_buyer_goods": true,
+     "c14_inventory_lighting": true,
+     "c15_promotion_goods_value": false,
+     "h2_01_trial_goods_value": false,
+     "h2_02_trial_cash": false,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": false,
+     "h2_05_refunds_paid_in_september": false,
+     "h2_06_lighting_buyer_friday": false,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": false,
+     "h2_09_approved_rule_comparison": false,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": false,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": false,
+     "h2_14_september_after_ads": true,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": true,
+     "h2_17_budget_and_forecast": true,
+     "h2_18_lighting_buyer_furniture_and_cash": true,
+     "h2_19_refunded_customer_emails": true,
+     "h2_20_change_the_definition": false,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "s03_sales_by_channel_september": true,
+     "s04_orders_august": true,
+     "s05_aov_september": true,
+     "s06_available_friday": true,
+     "s07_advertising_trial": true,
+     "s08_refunds_september": true,
+     "s09_recalculation_11_september": true,
+     "s10_promotion_orders": true,
+     "s11_email_orders_september": true,
+     "s12_goods_by_group_august": true,
+     "s13_cash_september_orders": true,
+     "s14_goods_by_customer_type": true,
+     "s15_on_hand_friday": true,
+     "u01_why_lighting": true,
+     "u02_forecast": true,
+     "u03_advice": true,
+     "u04_injection": true,
+     "u05_customer_emails": true,
+     "u06_unknown_cost_organic": true,
+     "u07_commercial_lead_cash": true,
+     "u08_cause_furniture": true,
+     "u09_unknown_cost_all_channels": true,
+     "u10_lighting_buyer_cash": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 21,
+      "passed": 17
+     },
+     "category:supported": {
+      "cases": 24,
+      "passed": 17
+     },
+     "category:unsupported": {
+      "cases": 15,
+      "passed": 14
+     }
+    }
+   },
+   "raw_schema": {
+    "cases": {
+     "c01_profit_clarify": false,
+     "c02_revenue_clarify": false,
+     "c03_make_cold_clarify": false,
+     "c04_approved_refund_comparison": false,
+     "c05_cash_by_group": false,
+     "c06_stock_default": false,
+     "c07_refund_rate_draft": false,
+     "c08_lighting_buyer_friday": false,
+     "c09_advertising_by_product": false,
+     "c10_several_promotions": false,
+     "c11_margin_clarify": false,
+     "c12_approved_rule_named": false,
+     "c13_lighting_buyer_goods": false,
+     "c14_inventory_lighting": false,
+     "c15_promotion_goods_value": false,
+     "h2_01_trial_goods_value": true,
+     "h2_02_trial_cash": true,
+     "h2_03_sofas_free_to_sell": true,
+     "h2_04_promo_orders_goods": true,
+     "h2_05_refunds_paid_in_september": true,
+     "h2_06_lighting_buyer_friday": true,
+     "h2_07_lighting_buyer_on_hand": true,
+     "h2_08_trial_ads_by_group": true,
+     "h2_09_approved_rule_comparison": true,
+     "h2_10_profit_friday_review": false,
+     "h2_11_has_friday_figure_moved": true,
+     "h2_12_september_sales": true,
+     "h2_13_organic_before_ads": true,
+     "h2_14_september_after_ads": false,
+     "h2_15_dining_chairs_now": true,
+     "h2_16_why_lighting_lost": false,
+     "h2_17_budget_and_forecast": false,
+     "h2_18_lighting_buyer_furniture_and_cash": false,
+     "h2_19_refunded_customer_emails": false,
+     "h2_20_change_the_definition": false,
+     "s01_friday_make": false,
+     "s02_friday_cash": false,
+     "s03_sales_by_channel_september": true,
+     "s04_orders_august": true,
+     "s05_aov_september": true,
+     "s06_available_friday": true,
+     "s07_advertising_trial": true,
+     "s08_refunds_september": false,
+     "s09_recalculation_11_september": true,
+     "s10_promotion_orders": true,
+     "s11_email_orders_september": true,
+     "s12_goods_by_group_august": true,
+     "s13_cash_september_orders": false,
+     "s14_goods_by_customer_type": true,
+     "s15_on_hand_friday": true,
+     "u01_why_lighting": false,
+     "u02_forecast": false,
+     "u03_advice": false,
+     "u04_injection": false,
+     "u05_customer_emails": false,
+     "u06_unknown_cost_organic": false,
+     "u07_commercial_lead_cash": true,
+     "u08_cause_furniture": false,
+     "u09_unknown_cost_all_channels": false,
+     "u10_lighting_buyer_cash": false
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 21,
+      "passed": 4
+     },
+     "category:supported": {
+      "cases": 24,
+      "passed": 20
+     },
+     "category:unsupported": {
+      "cases": 15,
+      "passed": 1
+     }
+    }
+   }
+  }
+ },
+ "offline-smoke": {
+  "model": "offline",
+  "recorded": "2026-10-21",
+  "variants": {
+   "annotated": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c08_lighting_buyer_friday": true,
+     "c10_several_promotions": false,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "u01_why_lighting": true,
+     "u06_unknown_cost_organic": false
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 4,
+      "passed": 3
+     },
+     "category:supported": {
+      "cases": 2,
+      "passed": 2
+     },
+     "category:unsupported": {
+      "cases": 2,
+      "passed": 1
+     }
+    }
+   },
+   "governed": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c08_lighting_buyer_friday": true,
+     "c10_several_promotions": false,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "u01_why_lighting": true,
+     "u06_unknown_cost_organic": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 4,
+      "passed": 3
+     },
+     "category:supported": {
+      "cases": 2,
+      "passed": 2
+     },
+     "category:unsupported": {
+      "cases": 2,
+      "passed": 2
+     }
+    }
+   },
+   "hybrid": {
+    "cases": {
+     "c01_profit_clarify": true,
+     "c04_approved_refund_comparison": true,
+     "c08_lighting_buyer_friday": true,
+     "c10_several_promotions": true,
+     "s01_friday_make": true,
+     "s02_friday_cash": true,
+     "u01_why_lighting": true,
+     "u06_unknown_cost_organic": true
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 4,
+      "passed": 4
+     },
+     "category:supported": {
+      "cases": 2,
+      "passed": 2
+     },
+     "category:unsupported": {
+      "cases": 2,
+      "passed": 2
+     }
+    }
+   },
+   "raw_schema": {
+    "cases": {
+     "c01_profit_clarify": false,
+     "c04_approved_refund_comparison": false,
+     "c08_lighting_buyer_friday": false,
+     "c10_several_promotions": false,
+     "s01_friday_make": false,
+     "s02_friday_cash": false,
+     "u01_why_lighting": false,
+     "u06_unknown_cost_organic": false
+    },
+    "categories": {
+     "category:constrained": {
+      "cases": 4,
+      "passed": 0
+     },
+     "category:supported": {
+      "cases": 2,
+      "passed": 0
+     },
+     "category:unsupported": {
+      "cases": 2,
+      "passed": 0
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,1338 @@
+{
+ "metrics": [
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "commercial lead",
+     "status": "certified",
+     "unit": "GBP",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: GBP. Grain: order line. Goods value of accepted, not cancelled order lines, after discounts, net of VAT and customer delivery fees; shipped or not, paid in full or not. Excludes: refunds, costs, cancelled orders. Not for: cash received (use cash_received) or contribution.\n",
+   "filter": null,
+   "label": "Accepted goods value",
+   "metadata": null,
+   "name": "goods_value",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "goods_value",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "accepted_date",
+     "non_additive_dimension": null,
+     "semantic_model": "order_lines"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "finance lead",
+     "status": "certified",
+     "unit": "GBP",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: GBP, a positive number. Grain: order line. Refunds paid by the cutoff. Excludes refunds only requested or approved but unpaid. Not for: approved refunds (use contribution_after_ads_v2 as a comparison).\n",
+   "filter": null,
+   "label": "Refunds paid",
+   "metadata": null,
+   "name": "refunds_paid",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "refunds_paid",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "accepted_date",
+     "non_additive_dimension": null,
+     "semantic_model": "order_lines"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "commercial lead",
+     "status": "certified",
+     "unit": "orders",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: orders. Distinct accepted, not cancelled orders. Not for: order lines or units sold.\n",
+   "filter": null,
+   "label": "Orders",
+   "metadata": null,
+   "name": "order_count",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "order_id",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "count_distinct",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "accepted_date",
+     "non_additive_dimension": null,
+     "semantic_model": "order_lines"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "commercial lead",
+     "status": "certified",
+     "unit": "orders",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: orders. Distinct accepted, not cancelled orders that used at least one promotion code. An order with two codes counts once. Not for: the number of codes used, or the value of the discount (not recorded).\n",
+   "filter": null,
+   "label": "Orders that used a promotion",
+   "metadata": null,
+   "name": "orders_with_promotion",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "case when promotion_count > 0 then order_id end",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "count_distinct",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "accepted_date",
+     "non_additive_dimension": null,
+     "semantic_model": "order_lines"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "hidden": true,
+     "last_reviewed": "2026-10-02",
+     "owner": "finance lead",
+     "status": "certified",
+     "unit": "GBP",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Building block of contribution_after_ads. Not for direct answers.",
+   "filter": null,
+   "label": "Contribution before advertising (paid-refund rule)",
+   "metadata": null,
+   "name": "contribution_before_ads_v1",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "contribution_before_ads_paid_rule",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "accepted_date",
+     "non_additive_dimension": null,
+     "semantic_model": "order_lines"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "hidden": true,
+     "last_reviewed": "2026-10-02",
+     "owner": "finance lead",
+     "status": "draft",
+     "unit": "GBP",
+     "version": 2
+    }
+   },
+   "datatype": null,
+   "description": "Building block of contribution_after_ads_v2. Not for direct answers.",
+   "filter": null,
+   "label": "Contribution before advertising (approved-refund rule)",
+   "metadata": null,
+   "name": "contribution_before_ads_v2",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "contribution_before_ads_approved_rule",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "accepted_date",
+     "non_additive_dimension": null,
+     "semantic_model": "order_lines"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "hidden": true,
+     "last_reviewed": "2026-10-02",
+     "owner": "finance lead",
+     "status": "certified",
+     "unit": "order lines",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Helper. Above zero means any contribution total is incomplete.",
+   "filter": null,
+   "label": "Order lines with an unknown cost",
+   "metadata": null,
+   "name": "lines_with_unknown_cost",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "cost_unknown",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "accepted_date",
+     "non_additive_dimension": null,
+     "semantic_model": "order_lines"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "cannot_group_by": [
+      "product_group",
+      "product"
+     ],
+     "last_reviewed": "2026-10-02",
+     "owner": "finance lead",
+     "sensitive": true,
+     "status": "certified",
+     "unit": "GBP",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: GBP. Grain: whole order. Settled payments less settled refunds for the selected orders, using payment records available by the cutoff; net of VAT and delivery fees; provider fees not deducted. Not a bank balance or provider payout. Not for: any product group split (payments belong to whole orders and there is no allocation rule).\n",
+   "filter": null,
+   "label": "Cash received",
+   "metadata": null,
+   "name": "cash_received",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "signed_amount",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "order_accepted_date",
+     "non_additive_dimension": null,
+     "semantic_model": "cash_movements"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "operations lead",
+     "status": "draft",
+     "unit": "units",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: units. Semi-additive: adds across products, never across days; over a period it gives the LAST day's position. Includes reserved and quarantined units. Not for: what can be sold now (use stock_available) or any live decision on an observation more than 24 hours old.\n",
+   "filter": null,
+   "label": "Stock on hand (units)",
+   "metadata": null,
+   "name": "stock_on_hand",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "on_hand",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "snapshot_date",
+     "non_additive_dimension": {
+      "name": "snapshot_date",
+      "window_choice": "max",
+      "window_groupings": []
+     },
+     "semantic_model": "stock"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "operations lead",
+     "status": "draft",
+     "unit": "units",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: units. On hand less reserved less quarantined, on the last day of the period (semi-additive). Not for: allocating stock now from an observation more than 24 hours old.\n",
+   "filter": null,
+   "label": "Stock available (units)",
+   "metadata": null,
+   "name": "stock_available",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "available",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "snapshot_date",
+     "non_additive_dimension": {
+      "name": "snapshot_date",
+      "window_choice": "max",
+      "window_groupings": []
+     },
+     "semantic_model": "stock"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "commercial lead",
+     "status": "certified",
+     "unit": "GBP per order",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: GBP per order. Accepted goods value divided by distinct orders. Not for: averages of order lines or of customers.\n",
+   "filter": null,
+   "label": "Average order value",
+   "metadata": null,
+   "name": "average_order_value",
+   "time_granularity": null,
+   "type": "ratio",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": {
+     "alias": null,
+     "filter": null,
+     "name": "order_count",
+     "offset_to_grain": null,
+     "offset_window": null
+    },
+    "expr": null,
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": null,
+    "metrics": [],
+    "numerator": {
+     "alias": null,
+     "filter": null,
+     "name": "goods_value",
+     "offset_to_grain": null,
+     "offset_window": null
+    },
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "finance lead",
+     "status": "draft",
+     "unit": "fraction",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: a fraction (0.05 = 5%). Paid refunds divided by accepted goods value for the same orders and cutoff. Draft: not yet certified. Not for: return rates in units, or refunds approved but not yet paid.\n",
+   "filter": null,
+   "label": "Refund rate (paid refunds / goods value)",
+   "metadata": null,
+   "name": "refund_rate",
+   "time_granularity": null,
+   "type": "ratio",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": {
+     "alias": null,
+     "filter": null,
+     "name": "goods_value",
+     "offset_to_grain": null,
+     "offset_window": null
+    },
+    "expr": null,
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": null,
+    "metrics": [],
+    "numerator": {
+     "alias": null,
+     "filter": null,
+     "name": "refunds_paid",
+     "offset_to_grain": null,
+     "offset_window": null
+    },
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "last_reviewed": "2026-10-02",
+     "owner": "commercial lead",
+     "status": "certified",
+     "unit": "GBP",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: GBP. Running total of accepted goods value from the first of the month to each day. Group by metric_time__day. Not for: a single period total (use goods_value).\n",
+   "filter": null,
+   "label": "Accepted goods value, month to date",
+   "metadata": null,
+   "name": "goods_value_mtd",
+   "time_granularity": null,
+   "type": "cumulative",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": {
+     "grain_to_date": "month",
+     "metric": {
+      "alias": null,
+      "filter": null,
+      "name": "goods_value",
+      "offset_to_grain": null,
+      "offset_window": null
+     },
+     "period_agg": "first",
+     "window": null
+    },
+    "denominator": null,
+    "expr": null,
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": null,
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "cannot_group_by": [
+      "product",
+      "customer",
+      "customer__region",
+      "customer__customer_type"
+     ],
+     "defaults": {
+      "cutoff": "friday_review",
+      "end": "2026-09-03",
+      "filters": {
+       "channel": "paid_search"
+      },
+      "start": "2026-08-31"
+     },
+     "last_reviewed": "2026-10-02",
+     "owner": "finance lead",
+     "refund_rule": "paid-refund rule",
+     "status": "certified",
+     "unit": "GBP",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: GBP. For each counted order line: goods value less refunds paid by the cutoff, less product and fulfilment cost estimates; summed by product group; less that group's advertising for the period and channel, once. An approved but unpaid refund does NOT count. The rule in force. Not: cash received, final profit (no overheads or provider fees), or a split below product group. Not for: what advertising caused.\n",
+   "filter": null,
+   "label": "Provisional contribution after advertising (version 1, paid-refund rule)",
+   "metadata": null,
+   "name": "contribution_after_ads",
+   "time_granularity": null,
+   "type": "derived",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "contribution_before_ads_v1 - advertising",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": null,
+    "metrics": [
+     {
+      "alias": null,
+      "filter": null,
+      "name": "contribution_before_ads_v1",
+      "offset_to_grain": null,
+      "offset_window": null
+     },
+     {
+      "alias": null,
+      "filter": null,
+      "name": "advertising",
+      "offset_to_grain": null,
+      "offset_window": null
+     }
+    ],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "cannot_group_by": [
+      "product",
+      "customer",
+      "customer__region",
+      "customer__customer_type"
+     ],
+     "last_reviewed": "2026-10-02",
+     "owner": "commercial lead",
+     "status": "certified",
+     "unit": "GBP",
+     "version": 1
+    }
+   },
+   "datatype": null,
+   "description": "Unit: GBP. Grain: channel, whole product group and period. Advertising recorded for paid search only. Not for: any split below product group (by product, order or customer): there is no allocation rule.\n",
+   "filter": null,
+   "label": "Advertising",
+   "metadata": null,
+   "name": "advertising",
+   "time_granularity": null,
+   "type": "simple",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "advertising",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": {
+     "agg": "sum",
+     "agg_params": {
+      "percentile": null,
+      "use_approximate_percentile": false,
+      "use_discrete_percentile": false
+     },
+     "agg_time_dimension": "period_start",
+     "non_additive_dimension": null,
+     "semantic_model": "advertising"
+    },
+    "metrics": [],
+    "numerator": null,
+    "window": null
+   }
+  },
+  {
+   "config": {
+    "meta": {
+     "approver": "head of data",
+     "cannot_group_by": [
+      "product",
+      "customer",
+      "customer__region",
+      "customer__customer_type"
+     ],
+     "defaults": {
+      "cutoff": "friday_review",
+      "end": "2026-09-03",
+      "filters": {
+       "channel": "paid_search"
+      },
+      "start": "2026-08-31"
+     },
+     "effective_from": "2026-10-05",
+     "last_reviewed": "2026-10-02",
+     "owner": "finance lead",
+     "refund_rule": "approved-refund rule",
+     "status": "draft",
+     "unit": "GBP",
+     "version": 2
+    }
+   },
+   "datatype": null,
+   "description": "Unit: GBP. As contribution_after_ads, except a refund counts once it is approved by the cutoff, paid or not; each refund once. NOT the rule in force before its effective_from date (in its metadata): until then, use only when someone asks what counting approved refunds would do, and label the answer a comparison.\n",
+   "filter": null,
+   "label": "Provisional contribution after advertising (version 2, approved-refund rule)",
+   "metadata": null,
+   "name": "contribution_after_ads_v2",
+   "time_granularity": null,
+   "type": "derived",
+   "type_params": {
+    "conversion_type_params": null,
+    "cumulative_type_params": null,
+    "denominator": null,
+    "expr": "contribution_before_ads_v2 - advertising",
+    "fill_nulls_with": null,
+    "grain_to_date": null,
+    "input_measures": [],
+    "is_private": false,
+    "join_to_timespine": false,
+    "measure": null,
+    "metric_aggregation_params": null,
+    "metrics": [
+     {
+      "alias": null,
+      "filter": null,
+      "name": "contribution_before_ads_v2",
+      "offset_to_grain": null,
+      "offset_window": null
+     },
+     {
+      "alias": null,
+      "filter": null,
+      "name": "advertising",
+      "offset_to_grain": null,
+      "offset_window": null
+     }
+    ],
+    "numerator": null,
+    "window": null
+   }
+  }
+ ],
+ "project_configuration": {
+  "dsi_package_version": {
+   "major_version": "0",
+   "minor_version": "213",
+   "patch_version": "0"
+  },
+  "metadata": null,
+  "time_spine_table_configurations": [],
+  "time_spines": [
+   {
+    "custom_granularities": [],
+    "node_relation": {
+     "alias": "metricflow_time_spine",
+     "database": "warehouse",
+     "relation_name": "\"warehouse\".\"main\".\"metricflow_time_spine\"",
+     "schema_name": "main"
+    },
+    "primary_column": {
+     "name": "date_day",
+     "time_granularity": "day"
+    }
+   }
+  ]
+ },
+ "saved_queries": [],
+ "semantic_models": [
+  {
+   "config": {
+    "meta": {}
+   },
+   "defaults": {
+    "agg_time_dimension": null
+   },
+   "description": "SYNTHETIC. One row per customer. email is personal data and is never exposed to assistants. Joined to facts through the customer entity.\n",
+   "dimensions": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": null,
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "customer_type",
+     "type": "categorical",
+     "type_params": null
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": null,
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "region",
+     "type": "categorical",
+     "type_params": null
+    }
+   ],
+   "entities": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "customer_id",
+     "label": null,
+     "metadata": null,
+     "name": "customer",
+     "role": null,
+     "type": "primary"
+    }
+   ],
+   "label": null,
+   "measures": [],
+   "metadata": null,
+   "name": "customers",
+   "node_relation": {
+    "alias": "dim_customers",
+    "database": "warehouse",
+    "relation_name": "\"warehouse\".\"main\".\"dim_customers\"",
+    "schema_name": "main"
+   },
+   "primary_entity": null
+  },
+  {
+   "config": {
+    "meta": {}
+   },
+   "defaults": {
+    "agg_time_dimension": "accepted_date"
+   },
+   "description": "One row per order line that counts, at one named cutoff. Never add rows up across cutoffs. Amounts are already line totals.\n",
+   "dimensions": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": null,
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "accepted_date",
+     "type": "time",
+     "type_params": {
+      "time_granularity": "day",
+      "validity_params": null
+     }
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": null,
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "product",
+     "type": "categorical",
+     "type_params": null
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": null,
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "cost_status",
+     "type": "categorical",
+     "type_params": null
+    }
+   ],
+   "entities": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "snapshot_key",
+     "label": null,
+     "metadata": null,
+     "name": "order_line_snapshot",
+     "role": null,
+     "type": "primary"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "order_id",
+     "label": null,
+     "metadata": null,
+     "name": "order",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "customer_id",
+     "label": null,
+     "metadata": null,
+     "name": "customer",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": null,
+     "label": null,
+     "metadata": null,
+     "name": "channel",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": null,
+     "label": null,
+     "metadata": null,
+     "name": "product_group",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "cutoff_id",
+     "label": null,
+     "metadata": null,
+     "name": "cutoff",
+     "role": null,
+     "type": "foreign"
+    }
+   ],
+   "label": null,
+   "measures": [],
+   "metadata": null,
+   "name": "order_lines",
+   "node_relation": {
+    "alias": "fct_order_lines",
+    "database": "warehouse",
+    "relation_name": "\"warehouse\".\"main\".\"fct_order_lines\"",
+    "schema_name": "main"
+   },
+   "primary_entity": null
+  },
+  {
+   "config": {
+    "meta": {}
+   },
+   "defaults": {
+    "agg_time_dimension": "order_accepted_date"
+   },
+   "description": "Settled money movements on whole orders, at one named cutoff. No product group. signed_amount is + in, - out.\n",
+   "dimensions": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": "accepted_date",
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "order_accepted_date",
+     "type": "time",
+     "type_params": {
+      "time_granularity": "day",
+      "validity_params": null
+     }
+    }
+   ],
+   "entities": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "snapshot_key",
+     "label": null,
+     "metadata": null,
+     "name": "cash_movement_snapshot",
+     "role": null,
+     "type": "primary"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "order_id",
+     "label": null,
+     "metadata": null,
+     "name": "order",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "customer_id",
+     "label": null,
+     "metadata": null,
+     "name": "customer",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": null,
+     "label": null,
+     "metadata": null,
+     "name": "channel",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "cutoff_id",
+     "label": null,
+     "metadata": null,
+     "name": "cutoff",
+     "role": null,
+     "type": "foreign"
+    }
+   ],
+   "label": null,
+   "measures": [],
+   "metadata": null,
+   "name": "cash_movements",
+   "node_relation": {
+    "alias": "fct_cash_movements",
+    "database": "warehouse",
+    "relation_name": "\"warehouse\".\"main\".\"fct_cash_movements\"",
+    "schema_name": "main"
+   },
+   "primary_entity": null
+  },
+  {
+   "config": {
+    "meta": {}
+   },
+   "defaults": {
+    "agg_time_dimension": "snapshot_date"
+   },
+   "description": "Stock per product per day, at one named cutoff. Semi-additive across days.\n",
+   "dimensions": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": null,
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "snapshot_date",
+     "type": "time",
+     "type_params": {
+      "time_granularity": "day",
+      "validity_params": null
+     }
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": "product",
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "stock_product",
+     "type": "categorical",
+     "type_params": null
+    }
+   ],
+   "entities": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "snapshot_key",
+     "label": null,
+     "metadata": null,
+     "name": "stock_snapshot",
+     "role": null,
+     "type": "primary"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": null,
+     "label": null,
+     "metadata": null,
+     "name": "product_group",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "cutoff_id",
+     "label": null,
+     "metadata": null,
+     "name": "cutoff",
+     "role": null,
+     "type": "foreign"
+    }
+   ],
+   "label": null,
+   "measures": [],
+   "metadata": null,
+   "name": "stock",
+   "node_relation": {
+    "alias": "fct_stock_daily",
+    "database": "warehouse",
+    "relation_name": "\"warehouse\".\"main\".\"fct_stock_daily\"",
+    "schema_name": "main"
+   },
+   "primary_entity": null
+  },
+  {
+   "config": {
+    "meta": {}
+   },
+   "defaults": {
+    "agg_time_dimension": "period_start"
+   },
+   "description": "Advertising per channel, whole product group and period, at one named cutoff. No rule shares it below product group.\n",
+   "dimensions": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": null,
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "period_start",
+     "type": "time",
+     "type_params": {
+      "time_granularity": "day",
+      "validity_params": null
+     }
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "datatype": null,
+     "description": "",
+     "expr": null,
+     "is_partition": false,
+     "label": null,
+     "metadata": null,
+     "name": "period_end",
+     "type": "time",
+     "type_params": {
+      "time_granularity": "day",
+      "validity_params": null
+     }
+    }
+   ],
+   "entities": [
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "snapshot_key",
+     "label": null,
+     "metadata": null,
+     "name": "ad_spend_snapshot",
+     "role": null,
+     "type": "primary"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": null,
+     "label": null,
+     "metadata": null,
+     "name": "channel",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": null,
+     "label": null,
+     "metadata": null,
+     "name": "product_group",
+     "role": null,
+     "type": "foreign"
+    },
+    {
+     "config": {
+      "meta": {}
+     },
+     "description": "",
+     "expr": "cutoff_id",
+     "label": null,
+     "metadata": null,
+     "name": "cutoff",
+     "role": null,
+     "type": "foreign"
+    }
+   ],
+   "label": null,
+   "measures": [],
+   "metadata": null,
+   "name": "advertising",
+   "node_relation": {
+    "alias": "fct_ad_spend",
+    "database": "warehouse",
+    "relation_name": "\"warehouse\".\"main\".\"fct_ad_spend\"",
+    "schema_name": "main"
+   },
+   "primary_entity": null
+  }
+ ]
+}

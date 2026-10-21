@@ -1,0 +1,10 @@
+models:
+  - name: metricflow_time_spine
+    description: One row per day from 2025 to 2027. Required by MetricFlow; holds no business rules.
+    config:
+      materialized: table
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        granularity: day
