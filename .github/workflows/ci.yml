@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0               # the diff step parses the base branch in a worktree
 
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.3.0   # this action publishes full version tags only
 
       - name: uv sync
         run: uv sync --locked
